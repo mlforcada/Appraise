@@ -1,0 +1,16 @@
+1:
+Corpus en linguistique sont de grandes collections de textes améliorés avec des balises spéciales.
+Corpus linguistics are large collections of texts enhanced with special tags.
+Corpora in {linguistics} are large {collection} of {text} {enhance} with special markup.
+2:
+Ils permettent linguistes pour consulter les textes de différents paramètres afin de découvrir des phénomènes et des modèles dans le langage naturel.
+They allow linguists to search the texts of different settings to discover phenomena and models in natural language.
+They {allow} {linguist} to {search} the {text} by various {parameter} in order to {discover} phenomena and {pattern} in the natural {language}.
+3:
+Études de corpus sont l'état de la méthode de l'art dans la plupart des domaines de la linguistique.
+Corpus studies are state of the art method in most areas of linguistics.
+Corpus {study} are the {state} of the {art} {method} in most {area} of {linguistics}.
+4:
+Dans les dernières années, corpus a commencé à faire leur chemin dans d'autres sciences humaines, telles que l'histoire, la sociologie ou la psychologie.
+In recent years, corpus began to make their way in other social sciences, such as history, sociology or psychology.
+In the recent {year}, {corpus} {start} to {make} their {way} into other {humanity}, such as {history}, {sociology} or psychology.
