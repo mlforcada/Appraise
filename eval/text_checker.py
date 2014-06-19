@@ -27,7 +27,7 @@ def determine_task_type(f):
 def find_answers(sentences):
     answers = []
     for sentence in sentences:
-        bracketed_words = re.findall('{[\w ]+}', sentence)
+        bracketed_words = re.findall('{[\w ]+}', sentence, flags=re.U)
         answers += bracketed_words
     return [answer.strip('{}') for answer in answers]
 
@@ -55,5 +55,6 @@ keys = k.read()
 answers = parse_tasks(task)
 answer_key = extract_keys(keys)
 score = compare_answers(answers, answer_key)
+print score
 t.close()
 k.close()

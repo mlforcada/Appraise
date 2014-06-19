@@ -25,10 +25,10 @@ lemmas = True
 mt = True  # whether to output machine translated text into the task
 
 # todo in command line: if no pos specified, use the whole list
-pos = ['n', 'vblex']
+pos = ['n', 'vblex', 'adj', 'adv']
 default_pos = ['n', 'vblex', 'vbmod', 'vbser', 'vbhaver', 'vaux', 'adj', 'post', 'adv', 'preadv', 'postadv', 'mod',
                'det', 'prn', 'pr', 'num', 'np', 'ij', 'cnjcoo', 'cnjsub', 'cnjadv']
-gap_density = 0.5  # 0-1
+gap_density = 0.7  # 0-1
 
 
 stream = reference.read()
@@ -65,9 +65,9 @@ for word in omit.keys():
     else:
         stream = re.sub('([^\w{}])('+word+')([^\w{}]+)', '\\1{\\2}\\3', stream)
 if lemmas:
-        bracketed_words = re.findall('{[\w ]+}', form_stream)
+        bracketed_words = re.findall('{[\w ]+}', form_stream, flags=re.U)
 else:
-    bracketed_words = re.findall('{[\w ]+}', stream)
+    bracketed_words = re.findall('{[\w ]+}', stream, flags=re.U)
 if multiple_choice:
     keys = [str(i+1) + ': ' + ', '.join(omit[bracketed_words[i].strip('{}')]) for i in range(len(bracketed_words))]
 else:
