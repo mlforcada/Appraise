@@ -55,6 +55,6 @@ keys = k.read()
 answers = parse_tasks(task)
 answer_key = extract_keys(keys)
 score = compare_answers(answers, answer_key)
-print score
+print 'Correct answers: ' + str(score)
 t.close()
 k.close()

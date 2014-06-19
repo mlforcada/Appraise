@@ -6,8 +6,6 @@ import random
 import re
 from collections import OrderedDict
 from text_generator import generate_task
-# todo stick the code into functions
-
 
 def splitter(a):
         return [x.strip('#)(.-:,;?!').lower() for x in a.split()]
@@ -20,15 +18,15 @@ tagged = codecs.open('tag.txt', 'r', 'utf-8')
 # options
 keyword = True  # false = unmotivated gaps, true = keyword extraction
 relative_density = False  # True = percentage calculated from number of keywords, false = from total number of words
+gap_density = 0.1  # 0-1
 multiple_choice = False  # todo in command line: make it so mch and lemmas can't be both true
-lemmas = True
-mt = True  # whether to output machine translated text into the task
+lemmas = False
+mt = False  # whether to output machine translated text into the task
 
 # todo in command line: if no pos specified, use the whole list
 pos = ['n', 'vblex', 'adj', 'adv']
 default_pos = ['n', 'vblex', 'vbmod', 'vbser', 'vbhaver', 'vaux', 'adj', 'post', 'adv', 'preadv', 'postadv', 'mod',
                'det', 'prn', 'pr', 'num', 'np', 'ij', 'cnjcoo', 'cnjsub', 'cnjadv']
-gap_density = 0.7  # 0-1
 
 
 stream = reference.read()
@@ -69,15 +67,12 @@ if lemmas:
 else:
     bracketed_words = re.findall('{[\w ]+}', stream, flags=re.U)
 if multiple_choice:
-    keys = [str(i+1) + ': ' + ', '.join(omit[bracketed_words[i].strip('{}')]) for i in range(len(bracketed_words))]
+    keys = [str(i+1) + ': ' + bracketed_words[i].strip('{}') for i in range(len(bracketed_words))]
+    for word in bracketed_words:
+        stream = stream.replace(word, '{' + ', '.join(omit[word.strip('{}')]) + '}')
+       # stream = re.sub(word, '\\1{'+', '.join(omit[bracketed_words[i].strip('{}')]) + '}\\3', stream)
+    #keys = [str(i+1) + ': ' + ', '.join(omit[bracketed_words[i].strip('{}')]) for i in range(len(bracketed_words))]
 else:
     keys = [str(i+1) + ': ' + bracketed_words[i].strip('{}') for i in range(len(bracketed_words))]
 
-# this is a writing section
-# todo call text_generator here
 generate_task(stream, keys, mt)
-# gap = codecs.open('gap.txt', 'w')
-# gap.write(stream)
-# gap.write('\r\n')
-# gap.write('; '.join(keys))
-# gap.close()
