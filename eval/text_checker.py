@@ -7,17 +7,18 @@ original text
 (optional) machine translation
 reference translation with {gaps} enclosed in brackets"""
 
-import codecs
+import click
 import re
 
-# todo when calling from command line, this will have to be specified as arguments and opened accordingly. no filenames.
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
 # todo should I try to guess file encodings? chardet module
 
 
 def determine_task_type(f):
-    lines = f.split('\r\n')
+    lines = f.split('\n')
     try:
-        int(lines[2].strip(':\r\n'))  # if it's a number, tasks have no mt translation
+        int(lines[2].strip(':\n'))  # if it's a number, tasks have no mt translation
         n = 3
     except ValueError:
         n = 4
@@ -34,27 +35,44 @@ def find_answers(sentences):
 
 def parse_tasks(task):
     n = determine_task_type(task)
-    gapped_sentences = [task.split('\r\n')[i] for i in range(n-1, len(task.split('\r\n'))-1, n)]
+    gapped_sentences = [task.split('\n')[i] for i in range(n-1, len(task.split('\n'))-1, n)]
     answers = find_answers(gapped_sentences)
     return answers
 
 
 def extract_keys(keys):
-    return [item.split(': ')[1] for item in keys.split('\r\n')]
+    return [item.split(': ')[1] for item in keys.split('\n')]
 
 
 def compare_answers(user, correct):
     return sum([1 for i in range(len(user)) if user[i] == correct[i]])
 
 # todo normalize input
+def check_text(text, answer):
+    task = text.read()
+    keys = answer.read()
+    answers = parse_tasks(task)
+    answer_key = extract_keys(keys)
+    score = compare_answers(answers, answer_key)
+    text.close()
+    answer.close()
+    return score, len(answers)
 
-t = codecs.open('task.txt', 'r', 'utf-8')
-k = codecs.open('keys.txt', 'r', 'utf-8')
-task = t.read()
-keys = k.read()
-answers = parse_tasks(task)
-answer_key = extract_keys(keys)
-score = compare_answers(answers, answer_key)
-print 'Correct answers: ' + str(score)
-t.close()
-k.close()
+
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.pass_context
+@click.argument('task', type=click.File('r', encoding='utf-8'))
+@click.argument('keys', type=click.File('r', encoding='utf-8'))
+def run_check(*args, **options):
+    """The program checks user-filled tasks for gisting evaluation. The task structure should be unchanged for
+    the script to work (assume the users only wrote/changed the words in brackets.
+    Two arguments are required:
+    task - path to the user's text file with the gaps filled in;
+    keys - path to answer keys generated with the task.
+    The program prints the number of correct answers to terminal.
+    """
+    score, total = check_text(options['task'], options['keys'])
+    click.echo('Correct answers: %d out of %d, or %d percent.' % (score, total, float(score)/float(total) * 100))
+
+if __name__ == '__main__':
+    run_check()

@@ -1,78 +1,62 @@
 # coding=utf-8
 __author__ = 'sereni'
 import kw_gen
-import codecs
 import random
 import re
 from collections import OrderedDict
 from text_generator import generate_task
 
-def splitter(a):
-        return [x.strip('#)(.-:,;?!').lower() for x in a.split()]
-
-#original = codecs.open('original.txt', 'r')
-reference = codecs.open('reference.txt', 'r', 'utf-8')
-#machine = codecs.open('machine.txt', 'r')
-tagged = codecs.open('tag.txt', 'r', 'utf-8')
-
-# options
-keyword = True  # false = unmotivated gaps, true = keyword extraction
-relative_density = False  # True = percentage calculated from number of keywords, false = from total number of words
-gap_density = 0.1  # 0-1
-multiple_choice = False  # todo in command line: make it so mch and lemmas can't be both true
-lemmas = False
-mt = False  # whether to output machine translated text into the task
-
-# todo in command line: if no pos specified, use the whole list
-pos = ['n', 'vblex', 'adj', 'adv']
-default_pos = ['n', 'vblex', 'vbmod', 'vbser', 'vbhaver', 'vaux', 'adj', 'post', 'adv', 'preadv', 'postadv', 'mod',
-               'det', 'prn', 'pr', 'num', 'np', 'ij', 'cnjcoo', 'cnjsub', 'cnjadv']
+# todo (maybe) rewrite args as a dictionary
 
 
-stream = reference.read()
-reference.close()
-tagged_stream = tagged.read()
-tagged.close()
+def everything(reference, tagged, original, keyword, relative_density, gap_density, multiple_choice, lemmas, mt, pos,
+               output, key):
 
-if multiple_choice or keyword or lemmas or pos != default_pos:
-    keywords, inv_lemm = kw_gen.generate_keywords(stream, tagged_stream, multiple_choice, keyword, pos)
-else:
-    keywords = []
-    for word in splitter(stream):
-        if (word, []) not in keywords:
-            keywords.append((word, []))
+    def splitter(a):
+            return [x.strip('#)(.-:,;?!').lower() for x in a.split()]
+    default_pos = ['n', 'vblex', 'vbmod', 'vbser', 'vbhaver', 'vaux', 'adj', 'post', 'adv', 'preadv', 'postadv', 'mod',
+                   'det', 'prn', 'pr', 'num', 'np', 'ij', 'cnjcoo', 'cnjsub', 'cnjadv']
+    stream = reference.read()
+    tagged_stream = tagged.read()
 
-if relative_density:
-    num_of_words = len(keywords)
-else:
-    num_of_words = len(splitter(stream))
-
-
-# this part works with kw density, removing a specified proportion of words
-try:
-    omit = OrderedDict([keywords[i] for i in sorted(random.sample(range(len(keywords)), int(num_of_words*gap_density)))])
-except ValueError:  # if sample is larger than population, take all the keywords
-    omit = OrderedDict(keywords)
-
-# this puts brackets around selected keywords, thus gaps
-form_stream = stream
-for word in omit.keys():
-    if lemmas:
-        form_stream = re.sub('([^\w{}])('+word+')([^\w{}]+)', '\\1{\\2}\\3', form_stream)
-        stream = re.sub('([^\w{}])('+word+')([^\w{}]+)', '\\1{' + inv_lemm[word] + '}\\3', stream)
+    if multiple_choice or keyword or lemmas or pos != default_pos:
+        keywords, inv_lemm = kw_gen.generate_keywords(stream, tagged_stream, multiple_choice, keyword, pos)
     else:
-        stream = re.sub('([^\w{}])('+word+')([^\w{}]+)', '\\1{\\2}\\3', stream)
-if lemmas:
-        bracketed_words = re.findall('{[\w ]+}', form_stream, flags=re.U)
-else:
-    bracketed_words = re.findall('{[\w ]+}', stream, flags=re.U)
-if multiple_choice:
-    keys = [str(i+1) + ': ' + bracketed_words[i].strip('{}') for i in range(len(bracketed_words))]
-    for word in bracketed_words:
-        stream = stream.replace(word, '{' + ', '.join(omit[word.strip('{}')]) + '}')
-       # stream = re.sub(word, '\\1{'+', '.join(omit[bracketed_words[i].strip('{}')]) + '}\\3', stream)
-    #keys = [str(i+1) + ': ' + ', '.join(omit[bracketed_words[i].strip('{}')]) for i in range(len(bracketed_words))]
-else:
-    keys = [str(i+1) + ': ' + bracketed_words[i].strip('{}') for i in range(len(bracketed_words))]
+        keywords = []
+        for word in splitter(stream):
+            if (word, []) not in keywords:
+                keywords.append((word, []))
 
-generate_task(stream, keys, mt)
+    if relative_density:
+        num_of_words = len(keywords)
+    else:
+        num_of_words = len(splitter(stream))
+
+    # this part works with kw density, removing a specified proportion of words
+    try:
+        omit = OrderedDict([keywords[i] for i in sorted(random.sample(range(len(keywords)), int(num_of_words*gap_density)))])
+    except ValueError:  # if sample is larger than population, take all the keywords
+        omit = OrderedDict(keywords)
+
+    # this puts brackets around selected keywords, thus gaps
+    form_stream = stream
+    for word in omit.keys():
+        if lemmas:
+            form_stream = re.sub('([^\w{}])('+word+')([^\w{}]+)', '\\1{\\2}\\3', form_stream)
+            stream = re.sub('([^\w{}])('+word+')([^\w{}]+)', '\\1{' + inv_lemm[word] + '}\\3', stream)
+        else:
+            stream = re.sub('([^\w{}])('+word+')([^\w{}]+)', '\\1{\\2}\\3', stream)
+    if lemmas:
+            bracketed_words = re.findall('{[\w ]+}', form_stream, flags=re.U)
+    else:
+        bracketed_words = re.findall('{[\w ]+}', stream, flags=re.U)
+    if multiple_choice:
+        keys = [str(i+1) + ': ' + bracketed_words[i].strip('{}') for i in range(len(bracketed_words))]
+        for word in bracketed_words:
+            stream = stream.replace(word, '{' + ', '.join(omit[word.strip('{}')]) + '}')
+    else:
+        keys = [str(i+1) + ': ' + bracketed_words[i].strip('{}') for i in range(len(bracketed_words))]
+    if not multiple_choice and not lemmas:
+        stream = re.sub('{[\w]*?}', '{ }', stream, flags=re.U)
+
+    generate_task(stream, keys, mt, original, output, key)

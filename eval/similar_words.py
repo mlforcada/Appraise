@@ -12,7 +12,6 @@ def similarity(word1, word2, gr, pos_tags):
         if tag in word1[1][1]:
             pos = tag
             break
-    # todo think what to do with non-parsed words. random alternatives?
     if pos in word2[1][1]:
         tags1 = set(word1[1][1])
         tags2 = set(word2[1][1])

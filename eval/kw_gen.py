@@ -95,7 +95,7 @@ def lemmatize(data):
             if form not in dictionary[lemma]:
                 dictionary[lemma].append(form)
         except KeyError:
-            dictionary[lemma] = [form]  # todo must be a standard operation for this, google it
+            dictionary[lemma] = [form]
     return dictionary
 
 
