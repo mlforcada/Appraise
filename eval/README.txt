@@ -1,10 +1,10 @@
-To use the toolkit, download the files. The Python files are required, and you may either use the default text 
+To use the toolkit, download the files. The Python files are required, and you may either use the default text
 files for testing or provide your own data. The toolkit has two dependencies, networkx and click, which can be 
 installed from pip:
 
  $ pip install click
 
-To generate tasks, run 
+To generate text-based tasks (for XML, see below), run
 
  $ python gist_eval.py [OPTIONS] ORIGINAL REFERENCE TAGS [TASK] [KEYS] 
 
@@ -36,3 +36,18 @@ TASK is a path to the filled-in task, and KEYS is a path to the answer keys, whi
 Note that the script assumes that the filled-in task structure is unchanged, and that the evaluator only filled 
 in / changed the words in the gaps. The script returns the number and percentage of correct answers based on the 
 answer key.
+
+The toolkit also generates XML to be imported into Appraise evaluation system. To generate XML, run
+
+ $ python gist_xml.py [OPTIONS] ORIGINAL REFERENCE TAGS [TASK]
+
+See description of the arguments and options above. Note that the KEYS argument is not used, because the answer keys
+are contained in the generated XML file. XML generation features the following additional options:
+
+* -l, --lang - a language pair of the task, two language codes separated by a hyphen, e.g. 'eo-en'. The first
+code specifies the source language, the second - the target language. This information is optional but useful
+for user selection in the system.
+* --doc - document ID. Appraise uses this to find the sentences from the same text to provide context. If not specified,
+a random id will be generated.
+* --set - set ID. A unique and descriptive name for the current set of tasks, will be seen in exported results.
+If not specified, will be set to a unique but undescriptive randomized ID.
