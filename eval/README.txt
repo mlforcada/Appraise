@@ -1,34 +1,38 @@
-To use the task generator, you should have the following files in one folder:
-- gaps.py
-- kw_gen.py
-- similar_words.py
-- tag_pairing.py
-- text_generator.py
+To use the toolkit, download the files. The Python files are required, and you may either use the default text 
+files for testing or provide your own data. The toolkit has two dependencies, networkx and click, which can be 
+installed from pip:
 
-You should also have the following text files in the same directory:
-- reference.txt, which contains reference translation and from which the words will be removed;
-- tag.txt, which contains the tagged version of reference.txt, obtained from apertium-tagger;
-- original.txt, which contains the original untranslated text and
-- (optionally) machine.txt, which is original.txt translated through Apertium, 
-  if you wish to give the evaluators machine translation for support.
-  
-The text files should have the same number of sentences (because they are the same text).
+ $ pip install click
 
-To make the tasks, run gaps.py. You can specify the following options in-file:
-- keyword (bool) - if True, the program tries to determine and remove significant words, 
-  if False, it will remove words at random;
-- pos (a list of Apertium pos tags) - if you want to remove any specific parts of speech, specify them here;
-- gap_density (0-1) - a float from 0 to 1 which determines the percentage of gaps to be created;
-- relative_density (bool) - if True, the keywords will be determined and then the specified percentage
-  of those will be taken out, if False - the gap density will be calculated against the number of words 
-  in the original text (but not more than the number of keywords found if keyword is True);
-- multiple_choice or lemmas (bool) - specifies the task mode. If multiple choice is True, 
-  a choice of options is given for each gap. If lemmas is True, a word lemma is left in each gap to help 
-  the evaluator. If both are False, no help is given;
-- mt (bool) specifies whether or not to give machine translation as assistance.
+To generate tasks, run 
 
-After you run gaps.py, files task.txt and keys.txt will be generated. To check the answers, 
-run text_checker.py with task.txt and keys.txt in the same directory. The structure of task.txt should 
-be unchanged, we assume that the evaluators only change the words in brackets. For testing purposes, 
-if on task generation both multiple_choice and lemmas are False, the script will not remove correct 
-answers from the gaps, so the task.txt can be fed to the checking module without any modifications.
+ $ python gist_eval.py [OPTIONS] ORIGINAL REFERENCE TAGS [TASK] [KEYS] 
+
+ORIGINAL is the path to untranslated text, REFERENCE - to reference translation, from which the gapped text will 
+be created, TAGS - the reference translation put through Apertium tagger. TASK and KEYS are optional arguments, 
+which specify the path to save output files - the task itself and the answer keys, respectively. If those are 
+left out, the defaults will be task.txt and keys.txt in the script folder.
+
+The following options are supported:
+* -mt, --machine FILENAME – original text translated through Apertium, if the tasks should contain machine 
+translation as a tip for evaluator;
+* -m, --mode [simple | choices | lemmas] - specifies task mode. Simple just removes the words, choices gives 
+a choice of three options for each gap, and lemmas leaves the word's lemma in place, and the user is to fill in 
+the correct grammatical form. The default mode is 'simple';
+* -k, --keyword - if on, the words to be removed will be determined with keyword selection algorithm, if off - 
+the words will be randomly selected;
+* -d, --density - an integer from 1 to 100, specifies gap density. The default is 50;
+* -r, --relative - if on, the gap density is calculated against the number of words which were selected to be 
+removed, if off - against the total number of words in the text (but not more than the number of keywords found, 
+if the keyword mode is on);
+* -p, --pos - if you wish to remove only specific parts of speech, specify them here as a string of Apertium 
+part-of-speech tags separated by commas, i.e. 'vblex, n, adj'.
+
+To check the task completed by the user, run
+
+ $ python text_checker.py TASK KEYS
+
+TASK is a path to the filled-in task, and KEYS is a path to the answer keys, which were generated with the task. 
+Note that the script assumes that the filled-in task structure is unchanged, and that the evaluator only filled 
+in / changed the words in the gaps. The script returns the number and percentage of correct answers based on the 
+answer key.
