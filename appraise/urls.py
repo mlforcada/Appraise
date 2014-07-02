@@ -4,7 +4,7 @@ Project: Appraise evaluation system
  Author: Christian Federmann <cfedermann@gmail.com>
 """
 # pylint: disable-msg=W0611
-from django.conf.urls import patterns, include, handler404, handler500
+from django.conf.urls.defaults import patterns, include, handler404, handler500
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
@@ -23,14 +23,14 @@ urlpatterns = patterns('appraise.views',
 )
 
 # Patterns for "evaluation" app.
-#urlpatterns += patterns('appraise.evaluation.views',
-#  (r'^{0}evaluation/$'.format(DEPLOYMENT_PREFIX), 'overview'),
-#  (r'^{0}evaluation/(?P<task_id>[a-f0-9]{{32}})/'.format(DEPLOYMENT_PREFIX), 'task_handler'),
-#  (r'^{0}status/$'.format(DEPLOYMENT_PREFIX), 'status_view'),
-#  (r'^{0}status/(?P<task_id>[a-f0-9]{{32}})/'.format(DEPLOYMENT_PREFIX), 'status_view'),
-#  (r'^{0}export/(?P<task_id>[a-f0-9]{{32}})/'.format(DEPLOYMENT_PREFIX), 'export_task_results'),
-#  (r'^{0}agreement/(?P<task_id>[a-f0-9]{{32}})/'.format(DEPLOYMENT_PREFIX), 'export_agreement_data'),
-#)
+urlpatterns += patterns('appraise.evaluation.views',
+(r'^{0}evaluation/$'.format(DEPLOYMENT_PREFIX), 'overview'),
+(r'^{0}evaluation/(?P<task_id>[a-f0-9]{{32}})/'.format(DEPLOYMENT_PREFIX), 'task_handler'),
+(r'^{0}status/$'.format(DEPLOYMENT_PREFIX), 'status_view'),
+(r'^{0}status/(?P<task_id>[a-f0-9]{{32}})/'.format(DEPLOYMENT_PREFIX), 'status_view'),
+(r'^{0}export/(?P<task_id>[a-f0-9]{{32}})/'.format(DEPLOYMENT_PREFIX), 'export_task_results'),
+(r'^{0}agreement/(?P<task_id>[a-f0-9]{{32}})/'.format(DEPLOYMENT_PREFIX), 'export_agreement_data'),
+)
 
 # Patterns for "WMT13" app.
 #urlpatterns += patterns('appraise.wmt13.views',

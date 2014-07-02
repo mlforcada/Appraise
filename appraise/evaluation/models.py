@@ -32,6 +32,7 @@ APPRAISE_TASK_TYPE_CHOICES = (
   ('3', 'Post-editing'),
   ('4', 'Error classification'),
   ('5', '3-Way Ranking'),
+  ('6', 'Gisting'),
 )
 
 
@@ -136,7 +137,6 @@ class EvaluationTask(models.Model):
       verbose_name="Random order?"
     )
 
-
     class Meta:
         """
         Metadata options for the EvaluationTask object model.
@@ -179,7 +179,6 @@ class EvaluationTask(models.Model):
             
             # We have to call save() here to get an id for this task.
             super(EvaluationTask, self).save(*args, **kwargs)
-            
             self.task_xml.open()
             _tree = fromstring(self.task_xml.read())
             self.task_xml.close()
@@ -249,6 +248,9 @@ class EvaluationTask(models.Model):
         
         elif _task_type == '3-Way Ranking':
             pass
+
+        elif _task_type == 'Gisting':
+            pass
         
         return _header
     
@@ -298,6 +300,9 @@ class EvaluationTask(models.Model):
             pass
         
         elif _task_type == '3-Way Ranking':
+            pass
+
+        elif _task_type == 'Gisting':
             pass
         
         return _status
@@ -399,6 +404,7 @@ def validate_item_xml(value):
     """
     Checks that item_xml contains source, reference, some translation tags.
     """
+    # todo add checks for task type, fill and answer attributes in gisting tasks
     try:
         if isinstance(value, Element):
             _tree = value
@@ -543,7 +549,6 @@ class EvaluationResult(models.Model):
         return '{}'.format(self.duration)
     
     raw_result = models.TextField(editable=False, blank=False)
-    
     results = None
     
     class Meta:
@@ -592,6 +597,13 @@ class EvaluationResult(models.Model):
                 
                 elif _task_type == '3-Way Ranking':
                     self.results = self.raw_result
+
+                elif _task_type == 'Gisting':
+                    res = self.raw_result.split(';')
+                    total = len(res)
+                    correct = sum([eval(item.split(',')[1]) for item in res])
+                    answers = ', '.join([item.split(',')[0] for item in res])
+                    self.results = u'correct: {0}/{1}, answers: {2}'.format(str(correct), str(total), answers)
             
             # pylint: disable-msg=W0703
             except Exception, msg:
@@ -616,6 +628,9 @@ class EvaluationResult(models.Model):
         
         elif _task_type == '3-Way Ranking':
             return self.export_to_three_way_ranking_xml()
+
+        elif _task_type == 'Gisting':
+            return self.export_to_gisting_xml()
     
     def export_to_quality_checking_xml(self):
         """
@@ -773,6 +788,24 @@ class EvaluationResult(models.Model):
           'user': self.user,
         }
         
+        return template.render(Context(context))
+
+    def export_to_gisting_xml(self):
+        """
+        Renders this EvaluationResult as Gisting XML String.
+        """
+        template = get_template('evaluation/result_gisting.xml')
+
+        _attr = self.item.attributes.items()
+        attributes = ' '.join(['{}="{}"'.format(k, v) for k, v in _attr])
+
+        context = {
+            'attributes': attributes,
+            'duration': '{}'.format(self.duration),
+            'result': self.results,
+            'user': self.user,
+        }
+
         return template.render(Context(context))
 
 @receiver(models.signals.post_save, sender=EvaluationResult)
