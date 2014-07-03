@@ -7,7 +7,6 @@ __author__ = 'Sereni'
 and keys for the current task,
 and write them to two text files."""
 
-#import codecs
 import re
 
 
@@ -16,10 +15,6 @@ def split_sentences(stream):
     sentences = re.findall(pattern, stream)
     sentences = [sentence.strip() for sentence in sentences]
     return sentences
-
-
-def decorate(sentence, tag):
-    return '<' + tag + '>' + sentence + '</' + tag + ''
 
 
 def zip_sentences(orig, mt, gap):
@@ -48,7 +43,6 @@ def generate_task(task, keys, mt, original, output, key):
     return
 
 
-# todo write a separate cli for xml, because screw that.
 def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, target):
 
     def compute_fill_and_keys(sentence, task_type):
@@ -77,7 +71,6 @@ def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, 
         return ';'.join(keys), ';'.join(fill), sentence
 
     original_sentences = [u'<{0}>{1}</{0}>'.format('source', item) for item in split_sentences(original.read())]
-    #task_sentences = [u'<{0} system="Apertium">{1}</{0}>'.format('translation', item) for item in split_sentences(task)]
     task_sentences = []
     for item in split_sentences(task):
         keys, fill, sentence = compute_fill_and_keys(item, task_type)

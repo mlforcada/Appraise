@@ -10,9 +10,7 @@ from text_generator import generate_task, generate_xml
 # todo the two functions are mostly the same, write some reusable code. separating for now not to break anything :<
 
 
-def everything(reference, tagged, original, keyword, relative_density, gap_density, multiple_choice, lemmas, mt, pos,
-               output, key):
-
+def generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, relative_density, gap_density):
     def splitter(a):
         return [x.strip('#)(.-:,;?!').lower() for x in a.split()]
 
@@ -24,6 +22,7 @@ def everything(reference, tagged, original, keyword, relative_density, gap_densi
     if multiple_choice or keyword or lemmas or pos != default_pos:
         keywords, inv_lemm = kw_gen.generate_keywords(stream, tagged_stream, multiple_choice, keyword, pos)
     else:
+        inv_lemm = None  # placeholder
         keywords = []
         for word in splitter(stream):
             if (word, []) not in keywords:
@@ -39,7 +38,13 @@ def everything(reference, tagged, original, keyword, relative_density, gap_densi
         omit = OrderedDict([keywords[i] for i in sorted(random.sample(range(len(keywords)), int(num_of_words*gap_density)))])
     except ValueError:  # if sample is larger than population, take all the keywords
         omit = OrderedDict(keywords)
+    return stream, omit, inv_lemm
 
+
+def prepare_text(reference, tagged, original, keyword, relative_density, gap_density, multiple_choice, lemmas, mt, pos,
+                 output, key):
+    stream, omit, inv_lemm = generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, relative_density,
+                                           gap_density)
     # this puts brackets around selected keywords, thus gaps
     form_stream = stream
     for word in omit.keys():
@@ -64,39 +69,11 @@ def everything(reference, tagged, original, keyword, relative_density, gap_densi
     generate_task(stream, keys, mt, original, output, key)
 
 
-def gaps_for_xml(reference, tagged, original, keyword, relative_density, gap_density, multiple_choice, lemmas, mt, pos,
+def prepare_xml(reference, tagged, original, keyword, relative_density, gap_density, multiple_choice, lemmas, mt, pos,
                  output, source, target, doc_id, set_id):
-
-    def splitter(a):
-        return [x.strip('#)(.-:,;?!').lower() for x in a.split()]
-
-    default_pos = ['n', 'vblex', 'vbmod', 'vbser', 'vbhaver', 'vaux', 'adj', 'post', 'adv', 'preadv', 'postadv', 'mod',
-                   'det', 'prn', 'pr', 'num', 'np', 'ij', 'cnjcoo', 'cnjsub', 'cnjadv']
-    stream = reference.read()
-    tagged_stream = tagged.read()
+    stream, omit, inv_lemm = generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, relative_density,
+                                           gap_density)
     task_type = 'simple'  # required in xml. simple by default, may change by the time we get to xml generator
-
-    if multiple_choice or keyword or lemmas or pos != default_pos:
-        keywords, inv_lemm = kw_gen.generate_keywords(stream, tagged_stream, multiple_choice, keyword, pos)
-    else:
-        keywords = []
-        for word in splitter(stream):
-            if (word, []) not in keywords:
-                keywords.append((word, []))
-
-    if relative_density:
-        num_of_words = len(keywords)
-    else:
-        num_of_words = len(splitter(stream))
-
-    # this part works with kw density, removing a specified proportion of words
-    try:
-        omit = OrderedDict([keywords[i] for i in sorted(random.sample(range(len(keywords)), int(num_of_words*gap_density)))])
-    except ValueError:  # if sample is larger than population, take all the keywords
-        omit = OrderedDict(keywords)
-
-    # this puts brackets around selected keywords, thus gaps
-    # todo here comes the part that differs in the two functions - separate everything above and reuse it
     form_stream = stream
     for word in omit.keys():
         if lemmas:

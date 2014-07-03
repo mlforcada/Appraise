@@ -1,7 +1,7 @@
 # coding=utf-8
 __author__ = 'Sereni'
 import click
-from gaps import gaps_for_xml
+from gaps import prepare_xml
 import uuid
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
@@ -85,7 +85,7 @@ def gist_xml(*args, **options):
         options['set'] = uuid.uuid4().hex
     source, target = options['lang'].split('-')
 
-    gaps_for_xml(options['reference'],
+    prepare_xml(options['reference'],
                  options['tags'],
                  options['original'],
                  keyword,

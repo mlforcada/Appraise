@@ -1,7 +1,7 @@
 # coding=utf-8
 __author__ = 'Sereni'
 import click
-from gaps import everything
+from gaps import prepare_text
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -67,7 +67,7 @@ def gist_eval(*args, **options):
     elif options['mode'] == 'lemmas':
         lemmas = True
         keyword = True
-    everything(options['reference'],
+    prepare_text(options['reference'],
                options['tags'],
                options['original'],
                keyword,
