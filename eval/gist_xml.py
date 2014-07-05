@@ -3,6 +3,8 @@ __author__ = 'Sereni'
 import click
 from gaps import prepare_xml
 import uuid
+import sh
+import codecs
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -24,16 +26,21 @@ def validate_pos(ctx, param, value):
 @click.pass_context
 @click.argument('original', type=click.File('r', encoding='utf-8'))
 @click.argument('reference', type=click.File('r', encoding='utf-8'))
-@click.argument('tags', type=click.File('r', encoding='utf-8'))
+# @click.argument('tags', type=click.File('r', encoding='utf-8'))
+@click.argument('tags', type=click.Path(exists=True))
 @click.argument('task', default='task.xml', type=click.File('w', encoding='utf-8'))
 @click.option('--lang', '-l', default='?-?',
               help="Codes for source and target languages, separated by hyphen, e.g. 'eo-en'.")
 @click.option('--doc',
               help='Document ID. Used to calculate context for sentences from the same text.')
 @click.option('--set', help='Set ID. A unique and descriptive name for the task.')
-@click.option('--machine', '-mt', type=click.File('r', encoding='utf-8'),
-              help='Original text translated through Apertium, if the task should contain machine '
-                   'translation for assistance')
+# @click.option('--machine', '-mt', type=click.File('r', encoding='utf-8'),
+#               help='Original text translated through Apertium, if the task should contain machine '
+#                    'translation for assistance')
+@click.option('--machine', '-mt', type=click.Path(exists=True),
+              help='Path to original text translated through Apertium (.txt file),'
+                   'or path to Apertium .mode file if the translation needs to be generated,'
+                   'e.g. /foo/bar/apertium-eo-en/en-eo.mode')
 @click.option('--mode', '-m', default='simple', type=click.Choice(['simple', 'choices', 'lemmas']),
               help='Select task mode: simple gaps, multiple choice gaps or gaps with lemmas')
 @click.option('--keyword', '-k', 'keyword', default=False, flag_value=True, help='Remove words based on keyword selection '
@@ -54,7 +61,10 @@ def gist_xml(*args, **options):
     \b
     original - an untranslated text;
     reference - a literary translation of original;
-    tags - the reference translation put through Apertium POS-tagger;
+    tags - the reference translation put through Apertium POS tagger.
+    You may also specify path to Apertium POS tagger here, e.g.
+    /foo/bar/apertium-eo-en/modes/en-eo-tagger.mode
+    In this case, the file will be generated using this tagger;
     machine - (optional) original text translated through Apertium,
     if the task should contain machine translation for assistance.
 
@@ -65,6 +75,31 @@ def gist_xml(*args, **options):
     including the correct answer. In lemmas mode, each gap will contain a lemma, and
     the user will be prompted to enter the correct word form.
     """
+    def launch_apertium(value, input):
+        if value.endswith('.mode'):
+            #output = 'meow'
+            chunks = value.split('/')
+            mode = chunks[-1].split('.')[0]
+            path = '/'.join(chunks[:-2])
+            p = sh.apertium('-d {0}'.format(path), mode, _in=input.encode('utf-8'), _encoding='utf-8')
+            output = p.stdout.decode('utf-8')
+        elif value.endswith('.txt'):
+            output = open(value).read()
+        else:
+            raise click.BadParameter('Invalid argument. Please specify either'
+                                     'path to .txt file or path to'
+                                     'Apertium translator / POS tagger for your language pair.')
+        return output
+
+    # open or generate tagged text
+    original = options['original'].read()
+    tags = launch_apertium(options['tags'], original)
+
+    # open or generate machine translation
+    try:
+        mt = launch_apertium(options['machine'], original)
+    except KeyError:
+        mt = None
 
     # determine task type
     keyword = False
@@ -86,20 +121,21 @@ def gist_xml(*args, **options):
     source, target = options['lang'].split('-')
 
     prepare_xml(options['reference'],
-                 options['tags'],
-                 options['original'],
-                 keyword,
-                 options['relative'],
-                 options['density'] / 100.0,
-                 multiple_choice,
-                 lemmas,
-                 options['machine'],
-                 options['pos'],
-                 options['task'],
-                 source,
-                 target,
-                 options['doc'],
-                 options['set'])
+                tags,
+                original,
+                keyword,
+                options['relative'],
+                options['density'] / 100.0,
+                multiple_choice,
+                lemmas,
+                mt,
+                options['pos'],
+                options['task'],
+                source,
+                target,
+                options['doc'],
+                options['set']
+                )
 
 if __name__ == '__main__':
     gist_xml()

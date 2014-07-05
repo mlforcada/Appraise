@@ -12,10 +12,13 @@ ORIGINAL is the path to untranslated text, REFERENCE - to reference translation,
 be created, TAGS - the reference translation put through Apertium tagger. TASK and KEYS are optional arguments, 
 which specify the path to save output files - the task itself and the answer keys, respectively. If those are 
 left out, the defaults will be task.txt and keys.txt in the script folder.
+Note: in TAGS, if you specify path to Apertium tagger for your language pair,
+it will generate the tagged text. An example path: "/apertium-eo-en/modes/en-eo-tagger.mode"
 
 The following options are supported:
 * -mt, --machine FILENAME – original text translated through Apertium, if the tasks should contain machine 
-translation as a tip for evaluator;
+translation as a tip for evaluator. If you specify path to Apertium translation module here,
+it will generate the machine translation for you, e.g. "/apertium-eo-en/modes/en-eo.mode";
 * -m, --mode [simple | choices | lemmas] - specifies task mode. Simple just removes the words, choices gives 
 a choice of three options for each gap, and lemmas leaves the word's lemma in place, and the user is to fill in 
 the correct grammatical form. The default mode is 'simple';

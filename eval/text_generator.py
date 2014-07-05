@@ -22,13 +22,10 @@ def zip_sentences(orig, mt, gap):
 
 
 def generate_task(task, keys, mt, original, output, key):
-    """mt: boolean
-    task: a stream as in file.read()
-    keys: a list of 'n: word'"""
-    original_sentences = split_sentences(original.read())
+    original_sentences = split_sentences(original)
     task_sentences = split_sentences(task)
     if mt:
-        machine_sentences = split_sentences(mt.read())
+        machine_sentences = split_sentences(mt)
     else:
         machine_sentences = ['' for sentence in original_sentences]  # a placeholder
     tasks = zip_sentences(original_sentences, machine_sentences, task_sentences)
@@ -70,14 +67,14 @@ def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, 
         sentence = re.sub('{[\w /,]*?}', '{ }', sentence, flags=re.U)
         return ';'.join(keys), ';'.join(fill), sentence
 
-    original_sentences = [u'<{0}>{1}</{0}>'.format('source', item) for item in split_sentences(original.read())]
+    original_sentences = [u'<{0}>{1}</{0}>'.format('source', item) for item in split_sentences(original)]
     task_sentences = []
     for item in split_sentences(task):
         keys, fill, sentence = compute_fill_and_keys(item, task_type)
         task_sentences.append(u'<{0} system="Apertium" type="{1}" fill="{2}" keys="{3}">{4}</{0}>'.format
                               ('translation', task_type, fill, keys, sentence))
     if mt:
-        machine_sentences = [u'<{0}>{1}</{0}>'.format('reference', item) for item in split_sentences(mt.read())]
+        machine_sentences = [u'<{0}>{1}</{0}>'.format('reference', item) for item in split_sentences(mt)]
     else:
         machine_sentences = [u'' for sentence in original_sentences]  # a placeholder
 

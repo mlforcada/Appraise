@@ -7,7 +7,6 @@ from collections import OrderedDict
 from text_generator import generate_task, generate_xml
 
 # todo (maybe) rewrite args as a dictionary
-# todo the two functions are mostly the same, write some reusable code. separating for now not to break anything :<
 
 
 def generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, relative_density, gap_density):
@@ -17,7 +16,7 @@ def generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, rela
     default_pos = ['n', 'vblex', 'vbmod', 'vbser', 'vbhaver', 'vaux', 'adj', 'post', 'adv', 'preadv', 'postadv', 'mod',
                    'det', 'prn', 'pr', 'num', 'np', 'ij', 'cnjcoo', 'cnjsub', 'cnjadv']
     stream = reference.read()
-    tagged_stream = tagged.read()
+    tagged_stream = tagged
 
     if multiple_choice or keyword or lemmas or pos != default_pos:
         keywords, inv_lemm = kw_gen.generate_keywords(stream, tagged_stream, multiple_choice, keyword, pos)
