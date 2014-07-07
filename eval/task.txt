@@ -1,16 +1,12 @@
 1:
 Corpus en linguistique sont de grandes collections de textes améliorés avec des balises spéciales.
-Corpus linguistics are large collections of texts enhanced with special tags.
-córpora in {linguistics} are {large} {collection} of {text} {enhance} with {special} markup.
+córpora in {linguistics, language, psychology} are {large, natural, special} {collections, linguists, parameters} of {texts, linguists, parameters} {enhanced, started, search} with {special, large, natural} markup.
 2:
 Ils permettent linguistes pour consulter les textes de différents paramètres afin de découvrir des phénomènes et des modèles dans le langage naturel.
-They allow linguists to search the texts of different settings to discover phenomena and models in natural language.
-They {allow} {linguist} to {search} the {text} by various {parameter} in order to {discover} phenomena and {pattern} in the {natural} {language}.
+They {allow, search, enhanced} {linguists, parameters, patterns} to {search, make, discover} the {texts, linguists, parameters} by various {parameters, linguists, patterns} in order to {discover, search, make} phenomena and {patterns, linguists, parameters} in the {natural, large, special} {language, linguistics, psychology}.
 3:
 Études de corpus sont l'état de la méthode de l'art dans la plupart des domaines de la linguistique.
-Corpus studies are state of the art method in most areas of linguistics.
-{córpus} {study} are the {state} of the {art} {method} in most {area} of {linguistics}.
+{córpus, linguistics, art} {studies, linguists, parameters} are the {state, linguistics, art} of the {art, linguistics, language} {method, linguistics, art} in most {areas, linguists, parameters} of {linguistics, language, psychology}.
 4:
 Dans les dernières années, corpus a commencé à faire leur chemin dans d'autres sciences humaines, telles que l'histoire, la sociologie ou la psychologie.
-In recent years, corpus began to make their way in other social sciences, such as history, sociology or psychology.
-In the {recent} {year}, {córpus} {start} to {make} their {way} into other {humanity}, such as {history}, {sociology} or psychology.
+In the {recent, large, natural} {years, humanities, linguists}, {córpora, linguists, parameters} {started, enhanced, search} to {make, search, discover} their {way, linguistics, art} into other {humanities, years, linguists}, such as {history, linguistics, art}, {sociology, linguistics, art} or psychology.
