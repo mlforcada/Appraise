@@ -21,9 +21,12 @@ def zip_sentences(orig, mt, gap):
     return zip(orig, mt, gap)
 
 
-def generate_task(task, keys, mt, original, output, key):
-    original_sentences = split_sentences(original)
+def generate_task(task, keys, mt, original, output, key, hide_source):
     task_sentences = split_sentences(task)
+    if hide_source:
+        original_sentences = ['' for sentence in task_sentences]
+    else:
+        original_sentences = split_sentences(original)
     if mt:
         machine_sentences = split_sentences(mt)
     else:
@@ -40,7 +43,7 @@ def generate_task(task, keys, mt, original, output, key):
     return
 
 
-def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, target):
+def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, target, hide_source):
 
     def compute_fill_and_keys(sentence, task_type):
         """This extracts values from brackets and generates the parameters fill and keys for xml"""
@@ -79,10 +82,11 @@ def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, 
         machine_sentences = [u'' for sentence in original_sentences]  # a placeholder
 
     pre_tasks = zip_sentences(original_sentences, machine_sentences, task_sentences)
-    tasks = [u'<{0} id="{2}" doc-id="{3}">{1}</{0}>'.format('seg', '\n'.join(pre_tasks[i]), str(i+1), doc_id)
+    tasks = [u'<{0} id="{2}" doc-id="{3}" hide-source="{4}">{1}</{0}>'.format('seg', '\n'.join(pre_tasks[i]), str(i+1),
+                                                                              doc_id, hide_source)
              for i in range(len(pre_tasks))]
-    xml = u'<set id="{0}" source-language="{1}" target-language="{2}">{3}</set>'.format(set_id, source, target,
-                                                                                       '\n'.join(tasks))
+    xml = u'<set id="{0}" source-language="{1}" target-language="{2}">{3}</set>'.format(
+        set_id, source, target, '\n'.join(tasks))
     output.write(xml)
     output.close()
     return

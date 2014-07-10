@@ -604,7 +604,7 @@ def _handle_gisting(request, task, items):
                 prefix, number = key.split('-')
                 answers[number] = answer
 
-        form_valid = all((item_id, now_timestamp, answers))
+        form_valid = all((item_id, now_timestamp))
 
     if form_valid:
         # calculate duration for this result
@@ -617,13 +617,17 @@ def _handle_gisting(request, task, items):
         # check answers and compute _raw_result
         keys = current_item.translations[0][1]['keys']
         result = []
-        for i in range(len(keys.split(';'))):
-            current_key = keys.split(';')[i]
-            current_answer = answers[str(i+1)]
-            correct = False
-            if current_answer == current_key:
-                correct = True
-            result.append((current_answer, correct))
+        print 'KEYS ', keys
+        if keys:
+            for i in range(len(keys.split(';'))):
+                current_key = keys.split(';')[i]
+                current_answer = answers[str(i+1)]
+                correct = False
+                if current_answer == current_key:
+                    correct = True
+                result.append((current_answer, correct))
+        else:
+            result.append(('no gaps', True))
 
         # unpack raw result, because it must be a string
         _raw_result = ';'.join([','.join((answer, str(correct))) for answer, correct in result])
@@ -682,10 +686,10 @@ def _handle_gisting(request, task, items):
 
     source_text, reference_text = _compute_context_for_item(item)
     _finished, _total = task.get_finished_for_user(request.user)
-
     dictionary = {
         'action_url': request.path,
         'description': task.description,
+        'hide_source': item.attributes['hide-source'],
         'item_id': item.id,
         'now': mktime(datetime.now().timetuple()),
         'reference_text': reference_text,

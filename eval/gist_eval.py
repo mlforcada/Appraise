@@ -86,7 +86,8 @@ def gist_eval(*args, **options):
 
     # open or generate tagged text
     original = options['original'].read()
-    tags = launch_apertium(options['tags'], original)
+    reference = options['reference'].read()
+    tags = launch_apertium(options['tags'], reference)
 
     # open or generate machine translation
     try:
@@ -104,7 +105,7 @@ def gist_eval(*args, **options):
     elif options['mode'] == 'lemmas':
         lemmas = True
         keyword = True
-    prepare_text(options['reference'],
+    prepare_text(reference,
                tags,
                original,
                keyword,

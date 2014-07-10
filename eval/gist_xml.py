@@ -51,6 +51,7 @@ def validate_pos(ctx, param, value):
 @click.option('--density', '-d', default=50, type=click.IntRange(0, 100), help='A percentage of words to be removed (0-100)')
 @click.option('--pos', '-p', default='blah', callback=validate_pos,
               help='Specify parts of speech to be removed based on Apertium POS tags, e.g. "n, vblex"')
+@click.option('--hide_orig', '-hd', default=False, flag_value=True, help='Hide source-language sentences from the task.')
 def gist_xml(*args, **options):
     """
     The gist_xml program produces sets of tasks for gisting evaluation of machine
@@ -93,11 +94,15 @@ def gist_xml(*args, **options):
 
     # open or generate tagged text
     original = options['original'].read()
-    tags = launch_apertium(options['tags'], original)
+    reference = options['reference'].read()
+    tags = launch_apertium(options['tags'], reference)
 
     # open or generate machine translation
     try:
-        mt = launch_apertium(options['machine'], original)
+        if options['machine']:
+            mt = launch_apertium(options['machine'], original)
+        else:
+            mt = None
     except KeyError:
         mt = None
 
@@ -120,7 +125,7 @@ def gist_xml(*args, **options):
         options['set'] = uuid.uuid4().hex
     source, target = options['lang'].split('-')
 
-    prepare_xml(options['reference'],
+    prepare_xml(reference,
                 tags,
                 original,
                 keyword,
@@ -134,7 +139,8 @@ def gist_xml(*args, **options):
                 source,
                 target,
                 options['doc'],
-                options['set']
+                options['set'],
+                options['hide_orig']
                 )
 
 if __name__ == '__main__':

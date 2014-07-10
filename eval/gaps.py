@@ -15,7 +15,7 @@ def generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, rela
 
     default_pos = ['n', 'vblex', 'vbmod', 'vbser', 'vbhaver', 'vaux', 'adj', 'post', 'adv', 'preadv', 'postadv', 'mod',
                    'det', 'prn', 'pr', 'num', 'np', 'ij', 'cnjcoo', 'cnjsub', 'cnjadv']
-    stream = reference.read()
+    stream = reference
     tagged_stream = tagged
 
     if multiple_choice or keyword or lemmas or pos != default_pos:
@@ -41,7 +41,7 @@ def generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, rela
 
 
 def prepare_text(reference, tagged, original, keyword, relative_density, gap_density, multiple_choice, lemmas, mt, pos,
-                 output, key):
+                 output, key, hide_source):
     stream, omit, inv_lemm = generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, relative_density,
                                            gap_density)
     # this puts brackets around selected keywords, thus gaps
@@ -65,11 +65,11 @@ def prepare_text(reference, tagged, original, keyword, relative_density, gap_den
     if not multiple_choice and not lemmas:
         stream = re.sub('{[\w]*?}', '{ }', stream, flags=re.U)
 
-    generate_task(stream, keys, mt, original, output, key)
+    generate_task(stream, keys, mt, original, output, key, hide_source)
 
 
 def prepare_xml(reference, tagged, original, keyword, relative_density, gap_density, multiple_choice, lemmas, mt, pos,
-                 output, source, target, doc_id, set_id):
+                 output, source, target, doc_id, set_id, hide_source):
     stream, omit, inv_lemm = generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, relative_density,
                                            gap_density)
     task_type = 'simple'  # required in xml. simple by default, may change by the time we get to xml generator
@@ -87,4 +87,4 @@ def prepare_xml(reference, tagged, original, keyword, relative_density, gap_dens
         for word in bracketed_words:
             stream = stream.replace(word, '{' + ', '.join(omit[word.strip('{}')]) + '}')
     # answer keys are not calculated here, and also nothing is removed from gaps. this will be done on xml generation
-    generate_xml(stream, mt, original, output, task_type, doc_id, set_id, source, target)
+    generate_xml(stream, mt, original, output, task_type, doc_id, set_id, source, target, hide_source)

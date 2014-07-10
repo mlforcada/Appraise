@@ -19,8 +19,10 @@
 {% if reference_text.1 %}
 <div class="span5">
 <blockquote>
+{% if not hide_source %}
 <p>{% if source_text.0 %}{{source_text.0}} {% endif %}<strong>{{source_text.1}}</strong>{% if source_text.2 %} {{source_text.2}}{% endif %}</p>
 <small>Source</small>
+{% endif %}
 </blockquote>
 </div>
 <div class="span5 offset1">
@@ -32,9 +34,11 @@
 {% else %}
 <div class="span12">
 <blockquote>
+{% if not hide_source %}
 <p>{% if source_text.0 %}{{source_text.0}} {% endif %}<strong>{{source_text.1}}</strong>{% if source_text.2 %} {{source_text.2}}{% endif %}</p>
 <small>Source</small>
 </blockquote>
+{% endif %}
 </div>
 {% endif %}
 </div>
