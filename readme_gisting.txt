@@ -42,6 +42,7 @@ Unless you are provided with ready tasks, you should also install Apertium for t
 To launch Appraise development server, in /appraise/evaluation run 
 $ python manage.py runserver
 The web-interface will be available at http://127.0.0.1:8000/appraise
+
 3.	How to use
 The project comes with a sample database, which contains one superuser and three tasks, one for each
 kind of gaps. To log into the system, use the login and password 'admin' (consider changing this).
@@ -100,6 +101,15 @@ to be removed, if off - against the total number of words in the text (but not m
 keywords found, if the keyword mode is on);
 * -p, --pos - if you wish to remove only specific parts of speech, specify them here as a string of
 Apertium part-of-speech tags separated by commas, i.e. 'vblex, n, adj' [5].
+* -l, --lang - a language pair of the task, two language codes separated by a hyphen, e.g. 'eo-en'. The first
+code specifies the source language, the second - the target language. This information is optional but useful
+for user selection in the system.
+* --doc - document ID. Appraise uses this to find the sentences from the same text to provide context. If not specified,
+a random id will be generated.
+* --set - set ID. A unique and descriptive name for the current set of tasks, will be seen in exported results.
+If not specified, will be set to a unique but undescriptive randomized ID.
+* -hd, --hide_orig - hide original sentences from the task (please provide them to the script anyway).
+
 Note: for tags and machine translation, you may generate them on the go by specifying path to Apertium
 modes. Each Apertium language pair contains the /modes folder with .mode files. The simple translation
 modes are called L1-L2.mode, where L1 and L2 are abbreviations for languages of the language pair. These are the modes that should be used to generate machine translation. For example, if you translate a text from Esperanto into English, you would specify “/foo/apertium-eo-en/modes/eo-en.mode” for the “--machine" option. To generate tagged text, specify path to Apertium tagger mode for your language pair, e.g. /foo/apertium-eo-en/modes/eo-en-tagger.mode. See your Apertium folder for mode names.
