@@ -20,14 +20,14 @@ def generate_morphodict(morph):
         return tags
 
     morphodict = {}
-    items = [x.strip('#)(.-:,;?!').lower() for x in input.split()]  # find all analysis chunks
+    items = [x.strip('#)(.-:,;?!').lower() for x in morph.split()]  # find all analysis chunks
     for item in items:
         # split first, record [0] as word form, and them for the rest of them run tagger to get tag lists
         analysis = item.lstrip('^').rstrip('$').split('/')
         word = analysis[0].replace('*', '')
         tags = []
         for variant in analysis[1:]:
-            tags.append(tagger(variant))
+            tags.append(tagger(variant.split('<')))
         morphodict[word] = tags
     return morphodict
 
@@ -39,6 +39,8 @@ def morph_filter(keywords, mdict, pos):
         tags = mdict[word]
         keep_word = False
         for tag_set in tags:  # in each tag set, find at least one tag from the allowed pos
+            if 'sent' in tag_set or 'cm' in tag_set:
+                continue
             keep_word = False
             for tag in pos:
                 if tag in tag_set:

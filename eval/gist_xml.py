@@ -128,10 +128,7 @@ def gist_xml(*args, **options):
         try:
             morph = generate_anmor(options['tags'], reference)
         except KeyError:
-            try:
-                morph = generate_anmor(options['lang'], reference)
-            except:  # if nothing else, go without morphology
-                morph = None
+            morph = None
 
     # determine task type
     keyword = False
