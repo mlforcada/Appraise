@@ -4,7 +4,6 @@ import click
 from gaps import prepare_xml
 import uuid
 import sh
-import codecs
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -78,7 +77,6 @@ def gist_xml(*args, **options):
     """
     def launch_apertium(value, input):
         if value.endswith('.mode'):
-            #output = 'meow'
             chunks = value.split('/')
             mode = chunks[-1].split('.')[0]
             path = '/'.join(chunks[:-2])
@@ -90,6 +88,22 @@ def gist_xml(*args, **options):
             raise click.BadParameter('Invalid argument. Please specify either'
                                      'path to .txt file or path to'
                                      'Apertium translator / POS tagger for your language pair.')
+        return output
+
+    def generate_anmor(value, text):
+
+        # from tagger or translation mode, try to guess morphological analyzer mode
+        if value.endswith('.mode'):
+            chunks = value.split('/')
+            mode = chunks[-1].split('.')[0]
+            path = '/'.join(chunks[:-2])
+            if mode.endswith('tagger'):
+                mode = '-'.join(mode.split('-')[:-1])
+            mode += '-anmor'
+            p = sh.apertium('-d {0}'.format(path), mode, _in=text.encode('utf-8'), _encoding='utf-8')
+            output = p.stdout.decode('utf-8')
+        else:
+            output = None  # well, should do without it
         return output
 
     # open or generate tagged text
@@ -105,6 +119,19 @@ def gist_xml(*args, **options):
             mt = None
     except KeyError:
         mt = None
+
+    # experimental: generate a morphological analysis to resolve pos ambiguity
+    # use all possible ways to determine the name of the analyzer
+    try:
+        morph = generate_anmor(options['machine'], reference)
+    except KeyError:
+        try:
+            morph = generate_anmor(options['tags'], reference)
+        except KeyError:
+            try:
+                morph = generate_anmor(options['lang'], reference)
+            except:  # if nothing else, go without morphology
+                morph = None
 
     # determine task type
     keyword = False
@@ -125,6 +152,14 @@ def gist_xml(*args, **options):
         options['set'] = uuid.uuid4().hex
     source, target = options['lang'].split('-')
 
+    try:
+        tags = tags.decode('utf-8')
+        mt = mt.decode('utf-8')
+    except UnicodeEncodeError:  # if it was unicode already
+        pass
+    except AttributeError:  # or if it's None
+        pass
+
     prepare_xml(reference,
                 tags,
                 original,
@@ -140,7 +175,8 @@ def gist_xml(*args, **options):
                 target,
                 options['doc'],
                 options['set'],
-                options['hide_orig']
+                options['hide_orig'],
+                morph
                 )
 
 if __name__ == '__main__':

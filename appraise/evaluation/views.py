@@ -617,7 +617,6 @@ def _handle_gisting(request, task, items):
         # check answers and compute _raw_result
         keys = current_item.translations[0][1]['keys']
         result = []
-        print 'KEYS ', keys
         if keys:
             for i in range(len(keys.split(';'))):
                 current_key = keys.split(';')[i]
@@ -689,7 +688,7 @@ def _handle_gisting(request, task, items):
     dictionary = {
         'action_url': request.path,
         'description': task.description,
-        'hide_source': item.attributes['hide-source'],
+        'hide_source': eval(item.attributes['hide-source']),
         'item_id': item.id,
         'now': mktime(datetime.now().timetuple()),
         'reference_text': reference_text,
@@ -697,6 +696,7 @@ def _handle_gisting(request, task, items):
         'translation': sentence,
         'source_text': source_text,
     }
+    print 'hide-source: ', len(item.attributes['hide-source']), type(item.attributes['hide-source'])
     return render(request, 'evaluation/gisting.html', dictionary)
 
 
@@ -836,7 +836,9 @@ def status_view(request, task_id=None):
             
             if len(results) == len(users):
                 result_data.extend(results)
-        
+
+        # todo for gisting, calculate - somehow - the percentage of answers against the number of different answers ->
+        # in that same gap, and also regroup them for readability
         _raw_results = []
         _keys = raw_result_data.keys()
         _total_results = float(sum(raw_result_data.values()))
