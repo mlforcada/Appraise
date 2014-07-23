@@ -10,6 +10,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 def validate_pos(ctx, param, value):
     try:
+        value = value.strip('"')
         default_pos = ['n', 'vblex', 'vbmod', 'vbser', 'vbhaver', 'vaux', 'adj', 'post', 'adv', 'preadv', 'postadv', 'mod',
                'det', 'prn', 'pr', 'num', 'np', 'ij', 'cnjcoo', 'cnjsub', 'cnjadv']
         pos = filter(lambda x: x in default_pos,
@@ -123,12 +124,9 @@ def gist_xml(*args, **options):
     # experimental: generate a morphological analysis to resolve pos ambiguity
     # use all possible ways to determine the name of the analyzer
     try:
-        morph = generate_anmor(options['machine'], reference)
+        morph = generate_anmor(options['tags'], reference)
     except KeyError:
-        try:
-            morph = generate_anmor(options['tags'], reference)
-        except KeyError:
-            morph = None
+        morph = None
 
     # determine task type
     keyword = False

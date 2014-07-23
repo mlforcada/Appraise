@@ -16,11 +16,11 @@ def generate_morphodict(morph):
         if word.startswith('*'):
             tags = []
         else:
-            tags = [k.strip('>$^#)(-.:,;?!') for k in t[1::]]
+            tags = [k.strip(u'`´>$^#)(-.:,;?!') for k in t[1::]]
         return tags
 
     morphodict = {}
-    items = [x.strip('#)(.-:,;?!').lower() for x in morph.split()]  # find all analysis chunks
+    items = [x.strip(u'`´#)(.-:,;?!').lower() for x in morph.split()]  # find all analysis chunks
     for item in items:
         # split first, record [0] as word form, and them for the rest of them run tagger to get tag lists
         analysis = item.lstrip('^').rstrip('$').split('/')
@@ -36,7 +36,10 @@ def morph_filter(keywords, mdict, pos):
     filtered_keywords = []
     for item in keywords:
         word = item[0]
-        tags = mdict[word]
+        try:
+            tags = mdict[word]
+        except KeyError:
+            continue  # todo this catches words with hyphen, treated as two -- fix to accommodate
         keep_word = False
         for tag_set in tags:  # in each tag set, find at least one tag from the allowed pos
             if 'sent' in tag_set or 'cm' in tag_set:
