@@ -28,7 +28,7 @@ def validate_pos(ctx, param, value):
 @click.argument('reference', type=click.File('r', encoding='utf-8'))
 # @click.argument('tags', type=click.File('r', encoding='utf-8'))
 @click.argument('tags', type=click.Path(exists=True))
-@click.argument('task', default='task.xml', type=click.File('w', encoding='utf-8'))
+@click.argument('task', default='task.xml', type=click.Path())
 @click.option('--lang', '-l', default='?-?',
               help="Codes for source and target languages, separated by hyphen, e.g. 'eo-en'.")
 @click.option('--doc',
@@ -52,6 +52,8 @@ def validate_pos(ctx, param, value):
 @click.option('--pos', '-p', default='blah', callback=validate_pos,
               help='Specify parts of speech to be removed based on Apertium POS tags, e.g. "n, vblex"')
 @click.option('--hide_orig', '-hd', default=False, flag_value=True, help='Hide source-language sentences from the task.')
+@click.option('--batch', '-b', default=False, flag_value=True,
+              help='Batch create files with all assistance mode and the same gaps.')
 def gist_xml(*args, **options):
     """
     The gist_xml program produces sets of tasks for gisting evaluation of machine
@@ -81,7 +83,7 @@ def gist_xml(*args, **options):
             chunks = value.split('/')
             mode = chunks[-1].split('.')[0]
             path = '/'.join(chunks[:-2])
-            p = sh.apertium('-d {0}'.format(path), mode, _in=input.encode('utf-8'), _encoding='utf-8')
+            p = sh.apertium('-u -d {0}'.format(path), mode, _in=input.encode('utf-8'), _encoding='utf-8')
             output = p.stdout.decode('utf-8')
         elif value.endswith('.txt'):
             output = open(value).read()
@@ -101,7 +103,7 @@ def gist_xml(*args, **options):
             if mode.endswith('tagger'):
                 mode = '-'.join(mode.split('-')[:-1])
             mode += '-anmor'
-            p = sh.apertium('-d {0}'.format(path), mode, _in=text.encode('utf-8'), _encoding='utf-8')
+            p = sh.apertium('-u -d {0}'.format(path), mode, _in=text.encode('utf-8'), _encoding='utf-8')
             output = p.stdout.decode('utf-8')
         else:
             output = None  # well, should do without it
@@ -171,7 +173,8 @@ def gist_xml(*args, **options):
                 options['doc'],
                 options['set'],
                 options['hide_orig'],
-                morph
+                morph,
+                options['batch']
                 )
 
 if __name__ == '__main__':

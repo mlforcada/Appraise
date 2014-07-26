@@ -8,6 +8,7 @@ and keys for the current task,
 and write them to two text files."""
 
 import re
+import codecs
 
 
 def split_sentences(stream):
@@ -43,31 +44,30 @@ def generate_task(task, keys, mt, original, output, key, hide_source):
     return
 
 
-def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, target, hide_source):
-
+def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, target, hide_source, batch):
     def compute_fill_and_keys(sentence, task_type):
         """This extracts values from brackets and generates the parameters fill and keys for xml"""
         keys = []
         fill = []
 
         if task_type == 'simple':
-            keys = [item.strip('{}') for item in re.findall('{[\w ]+}', sentence, flags=re.U)]
+            keys = [item.strip('{}') for item in re.findall('{[\w \']+}', sentence, flags=re.U)]
             fill = ['']*len(keys)
 
         # for lemmas, the gaps are {key/lemma}
         elif task_type == 'lemmas':
-            for item in re.findall('{[\w /]+}', sentence, flags=re.U):
+            for item in re.findall('{[\w /\']+}', sentence, flags=re.U):
                 key, lemma = item.split('/')
                 keys.append(key.strip('{}'))
                 fill.append(lemma.strip('{}'))
 
         elif task_type == 'choices':
-            gap_words = [item.split(', ') for item in re.findall('{[\w ,]+}', sentence, flags=re.U)]
+            gap_words = [item.split(', ') for item in re.findall('{[\w \',]+}', sentence, flags=re.U)]
             for item in gap_words:
                 keys.append(item[0].strip('{}'))
                 fill.append(','.join(item).replace('{', '').replace('}', ''))
 
-        sentence = re.sub('{[\w /,]*?}', '{ }', sentence, flags=re.U)
+        sentence = re.sub('{[\w /\',]*?}', '{ }', sentence, flags=re.U)
         return ';'.join(keys), ';'.join(fill), sentence
 
     original_sentences = [u'<{0}>{1}</{0}>'.format('source', item) for item in split_sentences(original)]
@@ -87,6 +87,22 @@ def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, 
              for i in range(len(pre_tasks))]
     xml = u'<set id="{0}" source-language="{1}" target-language="{2}">{3}</set>'.format(
         set_id, source, target, '\n'.join(tasks))
-    output.write(xml)
-    output.close()
+    o = codecs.open(output, 'w', 'utf-8')
+    o.write(xml)
+    o.close()
+
+    # this part creates the rest of the modes from xml with mt and source
+    if batch:
+        path = ''.join(output.split('.')[:-1])
+        mt_file = codecs.open(path+'-mt.xml', 'w', 'utf-8')
+        mt_file.write(xml.replace('hide-source="False"', 'hide-source="True"'))
+        mt_file.close()
+        src_file = codecs.open(path+'-src.xml', 'w', 'utf-8')
+        no_mt_xml = re.sub('<reference>.*?</reference>', '', xml)
+        src_file.write(no_mt_xml)
+        src_file.close()
+        none_file = codecs.open(path+'-none.xml', 'w', 'utf-8')
+        none_file.write(no_mt_xml.replace('hide-source="False"', 'hide-source="True"'))
+        none_file.close()
+
     return
