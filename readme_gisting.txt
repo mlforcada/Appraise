@@ -109,6 +109,9 @@ a random id will be generated.
 * --set - set ID. A unique and descriptive name for the current set of tasks, will be seen in exported results.
 If not specified, will be set to a unique but undescriptive randomized ID.
 * -hd, --hide_orig - hide original sentences from the task (please provide them to the script anyway).
+* -b, --batch - when generating a task with both source and machine translation sentences, use this flag to generate
+four files at once with different assistance modes (source sentence, machine translation, both and none) with the
+same gaps.
 
 Note: for tags and machine translation, you may generate them on the go by specifying path to Apertium
 modes. Each Apertium language pair contains the /modes folder with .mode files. The simple translation
