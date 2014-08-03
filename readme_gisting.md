@@ -101,7 +101,7 @@ user is to fill in the correct grammatical form. The default mode is 'simple';
 if off - the words will be randomly selected;
 * -d, --density - an integer from 1 to 100, specifies gap density. The default is 50;
 * -r, --relative - if on, the gap density is calculated against the number of words which were selected
-to be removed, if off - against the® total number of words in the text (but not more than the number of
+to be removed, if off - against the total number of words in the text (but not more than the number of
 keywords found, if the keyword mode is on);
 * -p, --pos - if you wish to remove only specific parts of speech, specify them here as a string of
 Apertium [part-of-speech tags][5] separated by commas, i.e. 'vblex, n, adj'.
