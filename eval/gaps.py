@@ -208,4 +208,4 @@ def prepare_xml(reference, tagged, original, keyword, relative_density, gap_dens
             stream = stream.replace(word, u'{'+word+u'/'+inv_lemm[word]+u'}')
 
     # answer keys are not calculated here, and also nothing is removed from gaps. this will be done on xml generation
-    generate_xml(stream, mt, original, output, task_type, doc_id, set_id, source, target, hide_source, batch)
+    generate_xml(stream, mt, original, output, task_type, doc_id, set_id, source, target, hide_source, batch, gap_density)

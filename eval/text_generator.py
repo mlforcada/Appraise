@@ -44,7 +44,7 @@ def generate_task(task, keys, mt, original, output, key, hide_source):
     return
 
 
-def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, target, hide_source, batch):
+def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, target, hide_source, batch, density):
     def compute_fill_and_keys(sentence, task_type):
         """This extracts values from brackets and generates the parameters fill and keys for xml"""
         keys = []
@@ -81,9 +81,20 @@ def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, 
     else:
         machine_sentences = [u'' for sentence in original_sentences]  # a placeholder
 
+    # determine hint type to write in segment tags
+    if mt and hide_source:
+        hint_type = 'mt'
+    elif mt and not hide_source:
+        hint_type = 'both'
+    elif not mt and hide_source:
+        hint_type = 'src'
+    elif not mt and hide_source:
+        hint_type = 'none'
+
     pre_tasks = zip_sentences(original_sentences, machine_sentences, task_sentences)
-    tasks = [u'<{0} id="{2}" doc-id="{3}" hide-source="{4}">{1}</{0}>'.format('seg', '\n'.join(pre_tasks[i]), str(i+1),
-                                                                              doc_id, hide_source)
+    tasks = [u'<{0} id="{2}" doc-id="{3}" hide-source="{4}" type="{5}">{1}</{0}>'.format('seg', '\n'.join(pre_tasks[i]),
+                                                                                         str(i+1), doc_id, hide_source,
+                                                                                         str(density)+':' + hint_type)
              for i in range(len(pre_tasks))]
     xml = u'<set id="{0}" source-language="{1}" target-language="{2}">{3}</set>'.format(
         set_id, source, target, '\n'.join(tasks))
