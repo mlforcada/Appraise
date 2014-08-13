@@ -12,8 +12,6 @@ import re
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
-# todo should I try to guess file encodings? chardet module
-
 
 def determine_task_type(f):
     lines = f.split('\n')
@@ -47,7 +45,7 @@ def extract_keys(keys):
 def compare_answers(user, correct):
     return sum([1 for i in range(len(user)) if user[i] == correct[i]])
 
-# todo normalize input
+
 def check_text(text, answer):
     task = text.read()
     keys = answer.read()

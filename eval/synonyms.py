@@ -11,9 +11,10 @@ from collections import Counter
 
 
 def parse_task(task):
-    root = et.fromstring(task)
-    data = ['']*len(root)
-    for segment in root:
+    data = {}
+    i = 0
+    for segment in task:
+        index = int(segment.attrib['id'].decode('utf-8'))
         for item in segment:
             if item.tag == 'translation':
                 sentence = item.text
@@ -24,41 +25,39 @@ def parse_task(task):
                 for key in keys.split(';'):
                     sentence = sentence.replace('{ }', key, 1)
                     pass
-                index = segment.attrib['id']
-                data[int(index)-1] = (sentence, keys)
-    return data
+
+                data[index] = (sentence, keys)
+                i += 1
+    data_list = [data[i] for i in sorted(data)]
+    return data_list
 
 
 def update_counters(ans, counters):
     """This updates the answer counters from each new answer string and returns new counter lists"""
     for i in range(len(counters)):
-            counters[i][ans[i].strip(' ')] += 1
+            counters[i][ans[i].strip(' ').lower()] += 1
     return counters
 
 
 def parse_result(result):
-    root = et.fromstring(result)
     results = {}
-    for child in root:
-        for item in child:
-            if isinstance(item.attrib['result'], str):
-                res = item.attrib['result'].decode('utf-8')
-            elif isinstance(item.attrib['result'], unicode):
-                res = item.attrib['result']
-            answers = res.split('answers:')[-1].split(', ')
-            index = item.attrib['id'].decode('utf-8')
-            try:
-                update_counters(answers, results[index])
-            except KeyError:
-                results[index] = [Counter([word.strip(' ')]) for word in answers]
-    data = ['']*len(results)
-    for key, value in results.items():
-        data[int(key)-1] = value
+    for gisting_item in result:  # item is a single person's answer, result corresponds to a task
+        if isinstance(gisting_item.attrib['result'], str):
+            res = gisting_item.attrib['result'].decode('utf-8')
+        elif isinstance(gisting_item.attrib['result'], unicode):
+            res = gisting_item.attrib['result']
+        answers = res.split('answers:')[-1].split(', ')
+        index = int(gisting_item.attrib['id'].decode('utf-8'))
+        try:
+            update_counters(answers, results[index])
+        except KeyError:
+            results[index] = [Counter([word.strip(' ').lower()]) for word in answers]
+    data = [results[i] for i in sorted(results)]
     return data
 
 
 def filter_counters(answer, counter, n):
-    del counter[answer]
+    del counter[answer.lower()]
     for word, count in counter.items():
         if count < n:
             del counter[word]
@@ -82,7 +81,7 @@ def format_output(l):
         for item in data:
             if item:
                 answer, counter = item
-                line = u'Key: {0}; Synonyms: {1}; Sentence: {2}\r\n'.format(answer, ','.join(counter.keys()),
+                line = u'{2} \r\nKey: {0}\r\nSynonyms: {1}\r\n\r\n'.format(answer, ', '.join(counter.keys()),
                                                                                                sentence)
                 formatted += line
     return formatted
@@ -126,10 +125,24 @@ def find_synonyms(*args, **options):
     The script writes the results to path specified in OUTPUT, giving the sentence, the word and its
     suggested synonyms.
     """
-    answers = parse_result(options['result'].read().encode('utf-8'))
-    sentences = parse_task(options['task'].read().encode('utf-8'))  # etree does not accept unicode
-    data = match(sentences, answers, options['threshold'])
-    options['output'].write(format_output(data))
+# todo write a note about clumping task xmls into one: must add a root tag. write a script maybe?
+# todo add a check for unmodified task files
+    answers = options['result'].read().encode('utf-8')
+    sentences = options['task'].read().encode('utf-8')
+
+    ans_root = et.fromstring(answers)
+    sent_root = et.fromstring(sentences)
+    if len(ans_root) != len(sent_root):
+        print 'Error: result and task files contain different number of tasks. Terminating.'
+        return
+    for i in range(len(ans_root)):
+        ans = parse_result(ans_root[i])
+        sent = parse_task(sent_root[i])
+        data = match(sent, ans, options['threshold'])
+        options['output'].write(format_output(data))
+
+# todo also ignore empty answers
+    # fixme result files do not necessarily contain all the tasks. must check by id, not just zip
     return
 
 if __name__ == '__main__':

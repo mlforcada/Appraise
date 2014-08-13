@@ -119,7 +119,10 @@ def distribute(*args, **options):
 
     distr = spread(sentences, sent_by_modes)
     pretty_print(distr)
-    return
+
+    # distr is a list of lists of semicolon-separated values: [[group1],[group2]] group1 = 'mode1','mode2'
+    # mode1 = 'sent1;sent2'
+    return distr
 
 if __name__ == '__main__':
     distribute()
