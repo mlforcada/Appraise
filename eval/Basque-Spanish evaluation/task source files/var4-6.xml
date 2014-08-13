@@ -1,0 +1,20 @@
+<set id="var4-6" source-language="eu" target-language="es">
+    <seg id="31" doc-id="33ebdb71326b4157bb84207651033c03" hide-source="True"><source>Gainera, adierazi du lehen kontratu horiek ez zirela onartzen Gipuzkoan, eta orain, berriz, Gipuzkoan kontratu bat onartu da eta Bizkaian beste bat ukatu.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;;;" keys="indica;contratos;Gipuzkoa;aceptado;Bizkaia">Además { } que antes se denegaban estos { } en Gipuzkoa y ahora sin embargo, en { } han { } uno y en { } han denegado otro.</translation></seg>
+    <seg id="32" doc-id="33ebdb71326b4157bb84207651033c03" hide-source="True"><source>Informazio- eta komunikazio—teknologiak erabiltzea, atzerriko hizkuntzaren bitartez testuak sortzeko, informazioa transmititzeko, elkar komunikatzeko eta lankidetzan aritzeko.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;;;" keys="Utilización;información;producir;colaborar;lengua">{ } de las tecnologías de la { } y la comunicación para { } textos, transmitir información, comunicarse y { } a  través de la { } extranjera.</translation></seg>
+    <seg id="33" doc-id="33ebdb71326b4157bb84207651033c03" hide-source="True"><source>Norberaren lana antolatzea, ikaskuntzan aurrera egiteko estrategiatzat.</source>
+        
+        <translation system="Apertium" type="simple" fill=";" keys="estrategia;aprendizaje">Organización del trabajo personal como { } para progresar en el { }.</translation></seg>
+    <seg id="34" doc-id="df3ee0e9b09740799399d4acd4c43d66" hide-source="True"><source>Oraindik bide luzea gelditzen zenean, neskameak Yubene gamelutik jaitsi zuen, bera jesarri, eta neskatila gameluari tiraka jarri zuen.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;;;;;;" keys="gran;esclava;muchacha;sentó;lugar;empezó;tirar;camello">Cuando estaban a una { } distancia, la { } bajó a la { } y se { } en su { }, y Yubene { } a { } del { }.</translation></seg>
+    <seg id="35" doc-id="df3ee0e9b09740799399d4acd4c43d66" hide-source="True"><source>Administrazioaren ordezkariak jakinarazi du bi eskabide epetik kanpo aurkeztu direla; eta, gainera, horietako batek alegatzen duela epearen azken egunean –apirilaren 30ean, 21:00etan– posta elektronikoz bidaltzen ahalegindu zela.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;;;;;;;;;;" keys="Administración;informa;presentado;solicitudes;plazo;circunstancia;alega;enviarla;día;abril;plazo;horas">El representante de la { } { } que se han { } dos { } fuera de { }, dándose la { } de que una de ellas { } haber intentado { } por correo electrónico el { } 30 de { }, ultimo día del { }, a las 21 { }.</translation></seg>
+    <seg id="36" doc-id="df3ee0e9b09740799399d4acd4c43d66" hide-source="True"><source>Konbinazio horiek direla eta, IISJ deiturikoa leku berezia da, Oñati eta inguruko paisaia apartaren baitan.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;;;" keys="combinaciones;hacen;lugar;extraordinario;entorno">Estas { } { } del IISJ un { } especial, enmarcado en el { } paisaje de Oñati y su { }.</translation></seg>
+</set>

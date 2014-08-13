@@ -1,0 +1,110 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+\title{Basque-Spanish Apertium translation system evaluation}
+\begin{document}
+%\subsection{}
+
+\begin{table}
+\centering
+\begin{tabular}{|r |*{4}{c}|}
+\hline
+ &\multicolumn{4}{c|}{Evaluation mode}\\
+\hline
+Gap percentage & MT and source hint & MT hint & No hint & Source hint\\
+\hline
+10\%&47.90 +/- 35.16&58.04 +/- 27.96&34.65 +/- 37.69&33.84 +/- 36.86\\
+20\%&46.30 +/- 25.14&52.73 +/- 23.73&26.52 +/- 27.64&30.16 +/- 28.46\\
+30\%&38.71 +/- 22.71&28.89 +/- 19.54&16.26 +/- 17.35&20.92 +/- 18.75\\
+\hline
+\end{tabular}
+\caption {Gaps successfully filled (\%), exactly as in reference.} \label{tab:title} 
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|r |*{4}{c}|}
+\hline
+ &\multicolumn{4}{c|}{Evaluation mode}\\
+\hline
+Gap percentage & MT and source hint & MT hint & No hint & Source hint\\
+\hline
+10\%&62.19 +/- 32.07&58.04 +/- 27.96&48.79 +/- 39.84&39.90 +/- 38.96\\
+20\%&64.81 +/- 30.03&70.18 +/- 26.98&30.91 +/- 30.22&31.37 +/- 28.42\\
+30\%&48.13 +/- 26.08&39.55 +/- 23.90&18.07 +/- 18.15&25.94 +/- 19.67\\
+\hline
+\end{tabular}
+\caption {Gaps successfully filled (\%), using a synonym list.} \label{tab:title} 
+\end{table}
+
+
+\begin{table}
+\centering
+\begin{tabular}{|r |*{4}{c}|}
+\hline
+ &\multicolumn{4}{c|}{Evaluation mode}\\
+\hline
+Gap percentage & MT and source hint & MT hint & No hint & Source hint\\
+\hline
+10\%&49.38&55.70&35.06&32.47\\
+20\%&48.23&55.64&30.14&32.31\\
+30\%&41.64&29.97&17.67&20.14\\
+\hline
+\end{tabular}
+\caption {Gaps successfully filled (\%), exactly as in reference.} \label{tab:title}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|r |*{4}{c}|}
+\hline
+ &\multicolumn{4}{c|}{Evaluation mode}\\
+\hline
+Gap percentage & MT and source hint & MT hint & No hint & Source hint\\
+\hline
+10\%&58.02&55.70&45.45&35.06\\
+20\%&65.96&68.42&33.56&33.85\\
+30\%&49.84&37.28&18.93&24.23\\
+\hline
+\end{tabular}
+\caption {Gaps successfully filled (\%), using a synonym list.} \label{tab:title} 
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|r |*{1}{c}|}
+\hline
+Gap percentage & Number of holes\\
+\hline
+10\%&94\\
+20\%&181\\
+30\%&272\\
+\hline
+\end{tabular}
+\caption {Total number of holes to be filled.} \label{tab:title}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|r |*{4}{c}|}
+\hline
+ &\multicolumn{4}{c|}{Evaluation mode}\\
+\hline
+Gap percentage & MT and source hint & MT hint & No hint & Source hint\\
+\hline
+10\%&1:27 +/- 1:27&1:47 +/- 1:57&0:46 +/- 0:44&1:06 +/- 0:38\\
+20\%&1:31 +/- 1:19&1:24 +/- 1:17&1:22 +/- 1:17&1:27 +/- 1:02\\
+30\%&3:54 +/- 5:02&2:50 +/- 1:51&2:47 +/- 2:07&2:36 +/- 1:22\\
+\hline
+\end{tabular}
+\caption {Time taken to fill the gaps in one sentence (m:s)} \label{tab:title} 
+\end{table}
+
+
+\end{document}  

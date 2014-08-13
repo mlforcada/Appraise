@@ -1,0 +1,21 @@
+<set id="var2-2" source-language="eu" target-language="es">
+    <seg id="7" doc-id="df3ee0e9b09740799399d4acd4c43d66" hide-source="True"><source>Kontuan hartzekoa da eskualde mailako destinoen dinamizazio planak garatzea sustatu dela, turismoaren garapenean entitate hauen eta udalerri batzuen protagonismoa areagotuz.</source>
+        <reference>Para coger en la cuenta el es del nivel de región destinoen dinamizazio los planes desarrollar ha impulsado ,, en el desarrollo del turismo de estas entidades y de algunos municipios protagonismoa por intensificar.</reference>
+        <translation system="Apertium" type="simple" fill=";;;;;;;" keys="fomentado;planes;destino;comarcal;aumentando;entidades;municipios;turístico">A tener en cuenta que  se ha { } el  desarrollo de { } de dinamización de { } de nivel { }, { } el protagonismo de estas { } y de algunos { } en el desarrollo { }.</translation></seg>
+    <seg id="8" doc-id="df3ee0e9b09740799399d4acd4c43d66" hide-source="True"><source>Dokumentuen behin-behineko emate-zerrendan adierazitakoa eta jasotako dokumentazioa alderatuko ditu.</source>
+        <reference>De los documentos provisional dar-en la lista adierazitakoa y la documentación recogida alderatuko tiene.</reference>
+        <translation system="Apertium" type="simple" fill=";;;;" keys="indicado;Relación;entrega;documentos;documentación">Cotejo entre lo { } en la { } provisional de { } de { } y la { } recibida.</translation></seg>
+    <seg id="9" doc-id="df3ee0e9b09740799399d4acd4c43d66" hide-source="True"><source>Aurre-aurreko hiru urteetan; nolanahi ere, Estatutu hau garatzeko emango diren Funtzio Publikoko Legeek izango dute eszedentzia eskatzeko bete beharreko gutxieneko zerbitzu-aldia laburragoa ezartzea.</source>
+        <reference>Antes-en los tres años precedentees; de todos modos, para desarrollar este Estatuto de la Función Pública que darán las Leyes tendrán eszedentzia para pedir lleno la vez de-servicio mínima del necesario más corto poner.</reference>
+        <translation system="Apertium" type="simple" fill=";;;;;;;;" keys="inmediatamente;Leyes;Pública;dicten;presente;establecer;menor;prestación;exigido">Tres años { } anteriores aunque las { } de Función { } que se { } en desarrollo del { } Estatuto podrán { } una duración { } del período de { } de servicios { }.</translation></seg>
+    <seg id="10" doc-id="c2bb2552abef49ae8f99a7dd4c2b4687" hide-source="True"><source>Horietako bakoitza garatzerakoan, irakasleak orain arte aipatutakoez erakutsiko die irakasleei, ikuspegi orokorra eta guztirakoa azaltzen saiatuz, eta ez zehatz-mehatz azalduz irakasgaiak.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;" keys="profesor;extremos;tratamiento">Al desarrollar cada una, el { } o la profesora instruirá al alumnado sobre los { } aludidos, procurando una visión generalizada y de conjunto, eludiendo el { } pormenorizado de las materias correspondientes.</translation></seg>
+    <seg id="11" doc-id="c2bb2552abef49ae8f99a7dd4c2b4687" hide-source="True"><source>Komunitate terapeutiko itundu gabeetan toxikomaniak tratatzeko diru-laguntzak ematea.</source>
+        
+        <translation system="Apertium" type="simple" fill="" keys="tratamiento">Ayudas económicas para el { } de toxicomanías en comunidades terapéuticas no concertadas.</translation></seg>
+    <seg id="12" doc-id="c2bb2552abef49ae8f99a7dd4c2b4687" hide-source="True"><source>Urtarriletik hona, brontzezko eskulturak Bilboko hiri-altzarietako bat dira, Bizkaiko hiriburuko erdialdetik pasieran dabiltzan pertsonen ikusgai.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;" keys="mes;urbano;pasean">Desde el { } de enero, las esculturas de bronce forman parte del mobiliario { } de Bilbao y pueden ser contempladas por los viandantes que se { } por el centro de la capital vizcaína.</translation></seg>
+
+</set>

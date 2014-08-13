@@ -1,0 +1,21 @@
+<set id="var1-4" source-language="eu" target-language="es">
+    <seg id="19" doc-id="c2bb2552abef49ae8f99a7dd4c2b4687" hide-source="True"><source>Ikasleek, jardueraren ondoren, gogoratzen dute zein den larrialdietako telefono-zenbakia.</source>
+        
+        <translation system="Apertium" type="simple" fill=";" keys="alumnos;atención">Los { } y las alumnas recuerdan el número de { } telefónica de emergencias después de la actividad.</translation></seg>
+    <seg id="20" doc-id="c2bb2552abef49ae8f99a7dd4c2b4687" hide-source="True"><source>CCOOk Sailak haur eta lehen hezkuntzako espezialistak ordainsarietarako poltsaren banaketan sartzeko saiaketa egin dezan eskatu du.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;" keys="haga;Infantil;bolsa">CCOO pide que el Departamento { } el esfuerzo para incluir a los especialistas de { } y Primaria en el reparto de la { } para retribuciones.</translation></seg>
+    <seg id="21" doc-id="c2bb2552abef49ae8f99a7dd4c2b4687" hide-source="True"><source>Zilegitasuna lortzeko, jendeak demokratikoki aukeratu dituen agintariek eta erakundeek hiritarren interesak behar bezala defendatzen dituztela sentitu behar du.</source>
+        
+        <translation system="Apertium" type="simple" fill=";" keys="sienta;instituciones">La condición clave de legitimidad es que la gente se { } representada por los dirigentes democráticamente elegidos del gobierno y las { } devueltos.</translation></seg>
+    <seg id="22" doc-id="33ebdb71326b4157bb84207651033c03" hide-source="True"><source>Biodieselaz gain, prozesu honen ondorioz glizerina ere lortzen da.</source>
+        
+        <translation system="Apertium" type="simple" fill=";" keys="consecuencia;obtiene">Además del biodiesel como { } de este proceso se { } glicerina.</translation></seg>
+    <seg id="23" doc-id="33ebdb71326b4157bb84207651033c03" hide-source="True"><source>“ESTAZIOEN ETA ELEKTROMEKANISMOEN TELEAGINTEA” PROIEKTUAN ZEHAZTURIKO EKIPOAK HORNITU ETA INSTALATZEA.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;" keys="INSTALACIÓN;DEFINIDOS;ESTACIONES">SUMINISTRO E { } DE LOS EQUIPOS { } EN EL PROYECTO “TELEMANDO DE { } Y ELECTROMECANISMOS”.</translation></seg>
+    <seg id="24" doc-id="33ebdb71326b4157bb84207651033c03" hide-source="True"><source>Autogobernua nahi duen lurralde-eremuaren barrutietan aukeratutako diputatu guztien biltzarra.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;;" keys="asamblea;elegidos;comprendidas;pretenda">Una { } de todos los Diputados { } en las circunscripciones { } en el ámbito territorial que { } acceder al autogobierno.</translation></seg>
+
+</set>

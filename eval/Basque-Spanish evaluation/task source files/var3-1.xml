@@ -1,0 +1,21 @@
+<set id="var3-1" source-language="eu" target-language="es">
+    <seg id="1" doc-id="c2bb2552abef49ae8f99a7dd4c2b4687" hide-source="True"><source>Datuak aztertzeko teknikak eta azterketak egiteko softwarea erabiltzeari buruz teknikoki aholkatzea.</source>
+        
+        <translation system="Apertium" type="simple" fill=";" keys="técnicas;efectuar">Asesorar técnicamente sobre utilización de { } de análisis de datos y software para { } los análisis.</translation></seg>
+    <seg id="2" doc-id="c2bb2552abef49ae8f99a7dd4c2b4687" hide-source="True"><source>Ingelesak kodetze-sistemaren aurka daude, eta kontinenteko herritarrok antieuropeismoari lotutako zantzuak ikusten ditugu hor.</source>
+        
+        <translation system="Apertium" type="simple" fill=";" keys="sistema;codificación">¿Por qué se oponen tanto al { } { }, donde los continentales entendemos que son antieuropeístas?.</translation></seg>
+    <seg id="3" doc-id="c2bb2552abef49ae8f99a7dd4c2b4687" hide-source="True"><source>Finkaren egoera juridikoa eta erregistrala zehazteko azterlanak egin behar dira, Cajaren alde eratzen den hipoteka lehenengoa izan dadin.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;" keys="situación;hipoteca;carácter">Que se efectúen los estudios correspondientes sobre la { } jurídica y registral de la finca de forma que la { } que se constituya a favor de la Caja tenga el { } de primera hipoteca.</translation></seg>
+    <seg id="4" doc-id="33ebdb71326b4157bb84207651033c03" hide-source="True"><source>Inolaz ere ez da beharrezkoa izango agiri bidez egiaztatzea Gizarte Segurantzaren Administrazioak berak zuzenean ezagutu beharreko alderdiak edo inguruabarrak, besteak beste, pentsioen eta subsidioen zenbatekoa.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;;;;" keys="necesario;circunstancias;pensiones;Administración;Seguridad;conocer">En ningún caso, será { } acreditar dochaurntalmente aquellos hechos o { }, tales como el importe de las { } y subsidios, que la { } de la { } Social deba { } por sí directamente.</translation></seg>
+    <seg id="5" doc-id="33ebdb71326b4157bb84207651033c03" hide-source="True"><source>Herritarrak gehienez 48 orduko epean jasotzen ditu agiriak bere etxean.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;" keys="ciudadano;domicilio;plazo">El { } recibe la documentación en su { } en el { } máximo de 48 horas.</translation></seg>
+    <seg id="6" doc-id="33ebdb71326b4157bb84207651033c03" hide-source="True"><source>Egintza horiek emateko egiten den izapide-bideari deitzen zaio administrazio-prozedura.</source>
+        
+        <translation system="Apertium" type="simple" fill=";;" keys="dictan;denomina;procedimiento">El cauce conforme al cual se { } estos actos es lo que se { } { } administrativo.</translation></seg>
+
+</set>
