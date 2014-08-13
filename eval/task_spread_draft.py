@@ -89,6 +89,22 @@ def pretty_print(data):
         for j in range(len(data[i])):
             print 'Mode {0}: {1}'.format(str(j+1), data[i][j])
 
+
+def dist(**options):
+    # this determines how many sentences each group should get (as even as possible)
+    sentences = options['sentences']
+    modes = options['modes']
+    groups = options['groups']
+
+    sent_each = divide(sentences * modes, groups)
+
+    # this determines how many sentences of each mode each group will get
+    sent_by_modes = [divide(sent_each[i], modes) for i in range(len(sent_each))]
+
+    distr = spread(sentences, sent_by_modes)
+    pretty_print(distr)
+    return distr
+
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 @click.command(context_settings=CONTEXT_SETTINGS)

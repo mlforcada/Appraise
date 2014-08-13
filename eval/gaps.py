@@ -156,7 +156,9 @@ def prepare_xml(reference, tagged, original, keyword, relative_density, gap_dens
         length = len(sentence.split(' '))
         index = random.choice(range(length))
         words = sentence.split(' ')
-        num_of_gaps = int(ceil(length * density))
+        num_of_gaps = int(round(length * density))
+        if num_of_gaps == 0:
+            num_of_gaps += 1
         step = int(length/float(num_of_gaps))
         possible_num = len([word for word in words if word.lower() in keywords.keys()])
         i = 0
@@ -195,8 +197,8 @@ def prepare_xml(reference, tagged, original, keyword, relative_density, gap_dens
     #         stream = stream.replace(word, '{' + ', '.join(omit[word.strip('{}').lower()]) + '}')
 
     # щас всё сделаем по-умному
+    # todo solve the inner period problem
     stream = ' '.join([gapify_sentence(sentence, omit, gap_density) for sentence in split_sentences(stream)])
-
     bracketed_words = re.findall('{[\w ]+}', stream, flags=re.U)
     if multiple_choice:
         task_type = 'choices'

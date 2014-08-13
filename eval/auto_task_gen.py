@@ -5,7 +5,7 @@ import random
 import sh
 import uuid
 from gaps import prepare_xml
-from task_spread_draft import distribute
+from task_spread_draft import dist
 import click
 
 # todo when core code is changed, replace tagger with anmor
@@ -31,9 +31,10 @@ def draw_sentences(src, ref, mt, tag, morph, n):
         sent_morph = morph.split('\n')
     if len(sent1) != len(sent2):
         print 'Error: the parallel texts contain different number of sentences. Please check your files.'
+        print 'Source: %d Target: %d' % (len(sent1), len(sent2))
         return
     pairs = [(sent1[i].strip('\r\n'), sent2[i].strip('\r\n'), sent_mt[i].strip('\r\n'),
-              sent_tag[i].strip('\r\n'), sent_morph[i].strip('\r\n')) for i in range(sent1)
+              sent_tag[i].strip('\r\n'), sent_morph[i].strip('\r\n')) for i in range(len(sent1))
              if len(sent1[i].split(' ')) >= 10]
     if len(pairs) < n:
         print 'Error: trying to draw more sentences (%d) than available (%d)' % (n, len(pairs))
@@ -62,7 +63,7 @@ def generate_texts(array, numbers):
     numbers: a string of semicolon-separated integers which correspond to sentence indices
     Generates five text strings to be fed into task generator: source, reference, mt, tagged and morph
     """
-    indices = numbers.split(';')
+    indices = [int(i) for i in numbers.split(';')]
     source = []
     reference = []
     machine = []
@@ -71,12 +72,12 @@ def generate_texts(array, numbers):
     for i in range(len(array)):
         if i in indices:
             src, ref, mt, tag, mrp = array[i]
-            source.append(src)
-            reference.append(ref)
-            machine.append(mt)
-            tagged.append(tag)
-            morph.append(mrp)
-    return ' '.join(source), ' '.join(reference), ' '.join(machine), ' '.join(tagged), ' '.join(morph)
+            source.append(src.strip('.'))
+            reference.append(ref.strip('.'))
+            machine.append(mt.strip('.'))
+            tagged.append(tag.strip('.'))
+            morph.append(mrp.strip('.'))
+    return '. '.join(source)+'.', '. '.join(reference)+'.', '. '.join(machine)+'.', '. '.join(tagged)+'.', '. '.join(morph)+'.'
 
 
 def parse_mode(s):
@@ -97,7 +98,7 @@ def parse_mode(s):
             return default_pos
 
     options = dict((e if len(e) > 1 else (e[0], True) for e in (elem.split()
-                    for elem in ('-'+d for d in s.split('-') if d))))
+                    for elem in ('-'+d for d in s.strip("'").split('-') if d))))
 
     try:
         val = options['-p']
@@ -151,15 +152,15 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.pass_context
 @click.argument('original', type=click.File('r', encoding='utf-8'))
 @click.argument('reference', type=click.File('r', encoding='utf-8'))
-@click.argument('sentences', type=click.INT())
-@click.argument('groups', type=click.INT())
+@click.argument('sentences', type=click.INT)
+@click.argument('groups', type=click.INT)
 @click.argument('mt_path', type=click.Path())
 @click.argument('tagger_path', type=click.Path())
 @click.argument('modes', nargs=-1)
 @click.option('--dir', help='Path to the directory where task files will be written.')
 @click.option('--lang', '-l', default='?-?',
               help="Codes for source and target languages, separated by hyphen, e.g. 'eo-en'.")
-def everything(**options):
+def everything(*args, **options):
     """
     This script generates tasks for evaluation of Apertium language pairs from a pair of parallel texts, and evenly
     distributes sentences in different modes among the evaluators.
@@ -223,7 +224,7 @@ def everything(**options):
     # generate texts
     mt = call_apertium(src, mt_mode)
     tag = call_apertium(ref, tagger)
-    morph = call_apertium(ref, tagger.replace('tagger', 'anmor'))
+    morph = call_apertium(ref, tagger.replace('tagger', 'morph'))
 
     # select a desired number of sentences from the corpus
     sent_array = draw_sentences(src, ref, mt, tag, morph, sentences)
@@ -234,17 +235,17 @@ def everything(**options):
         'groups': groups,
         'modes': modes_num
     }
-    dist = distribute(**kwargs)
+    distributed = dist(**kwargs)
 
-    for group_num in range(len(dist)):
-        for mode_num in range(len(dist[group_num])):
+    for group_num in range(len(distributed)):
+        for mode_num in range(len(distributed[group_num])):
             mode = options['modes'][mode_num]
-            source, reference, machine, tagged, anmor = generate_texts(sent_array, dist[group_num][mode_num])
+            source, reference, machine, tagged, anmor = generate_texts(sent_array, distributed[group_num][mode_num])
             opt_dict = parse_mode(mode)
 
             # see if need to pass mt text
             if opt_dict['machine']:
-                mode_mt = mt
+                mode_mt = machine
             else:
                 mode_mt = None
 
@@ -261,9 +262,13 @@ def everything(**options):
                 keyword = True
 
             # generate set and doc ids, parse language pair
-            if not options['doc']:
+            try:
+                options['doc']
+            except KeyError:
                 options['doc'] = uuid.uuid4().hex
-            if not options['set']:
+            try:
+                options['set']
+            except KeyError:
                 options['set'] = uuid.uuid4().hex
             src_lang, target_lang = options['lang'].split('-')
 
@@ -274,7 +279,7 @@ def everything(**options):
                         source,
                         keyword,
                         opt_dict['relative'],
-                        opt_dict['density'] / 100.0,
+                        float(opt_dict['density']) / 100.0,
                         multiple_choice,
                         lemmas,
                         mode_mt,
@@ -285,10 +290,11 @@ def everything(**options):
                         options['doc'],
                         options['set'],
                         opt_dict['hide_orig'],
-                        morph,
+                        anmor,
                         None  # this is for batch -- definitely not here
                         )
-
+if __name__ == '__main__':
+    everything()
 # input logic
 # 1. corpus: two parallel text files, sentences separated by line breaks
 # 2. general options: path to translator mode and to tagger/anmor -- by the way, will we resolve anmor? I say refactor
