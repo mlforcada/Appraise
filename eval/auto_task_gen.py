@@ -35,7 +35,7 @@ def draw_sentences(src, ref, mt, tag, morph, n):
         return
     pairs = [(sent1[i].strip('\r\n'), sent2[i].strip('\r\n'), sent_mt[i].strip('\r\n'),
               sent_tag[i].strip('\r\n'), sent_morph[i].strip('\r\n')) for i in range(len(sent1))
-             if len(sent1[i].split(' ')) >= 10]
+             if len(sent1[i].split(' ')) >= 9]
     if len(pairs) < n:
         print 'Error: trying to draw more sentences (%d) than available (%d)' % (n, len(pairs))
         return

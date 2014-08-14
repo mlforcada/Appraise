@@ -86,7 +86,7 @@ def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, 
         hint_type = 'mt'
     elif mt and not hide_source:
         hint_type = 'both'
-    elif not mt and hide_source:
+    elif not mt and not hide_source:
         hint_type = 'src'
     elif not mt and hide_source:
         hint_type = 'none'
@@ -94,7 +94,7 @@ def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, 
     pre_tasks = zip_sentences(original_sentences, machine_sentences, task_sentences)
     tasks = [u'<{0} id="{2}" doc-id="{3}" hide-source="{4}" type="{5}">{1}</{0}>'.format('seg', '\n'.join(pre_tasks[i]),
                                                                                          str(i+1), doc_id, hide_source,
-                                                                                         str(density)+':' + hint_type)
+                                                                                         str(int(density*100))+':' + hint_type)
              for i in range(len(pre_tasks))]
     xml = u'<set id="{0}" source-language="{1}" target-language="{2}">{3}</set>'.format(
         set_id, source, target, '\n'.join(tasks))

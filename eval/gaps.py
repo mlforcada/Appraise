@@ -46,7 +46,7 @@ def morph_filter(keywords, mdict, pos):
             if 'sent' in tag_set or 'cm' in tag_set:
                 continue
             keep_word = False
-            for tag in pos:
+            for tag in pos.split(','):
                 if tag in tag_set:
                     keep_word = True
                     break
@@ -71,7 +71,7 @@ def generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, rela
     stream = reference
     tagged_stream = tagged
 
-    if multiple_choice or keyword or lemmas or pos != default_pos:
+    if multiple_choice or keyword or lemmas: #or pos != default_pos:
         keywords, inv_lemm = kw_gen.generate_keywords(stream, tagged_stream, multiple_choice, keyword, pos)
     else:
         inv_lemm = None  # placeholder
@@ -160,7 +160,7 @@ def prepare_xml(reference, tagged, original, keyword, relative_density, gap_dens
         if num_of_gaps == 0:
             num_of_gaps += 1
         step = int(length/float(num_of_gaps))
-        possible_num = len([word for word in words if word.lower() in keywords.keys()])
+        possible_num = len([word for word in words if word.lower().strip(p) in keywords.keys()])
         i = 0
         gaps = set([])
         while i < num_of_gaps and i < possible_num:  # see if we haven't checked all the words already
