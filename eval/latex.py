@@ -79,7 +79,8 @@ def calculate_time(xml):
 @click.option('--par2', help='Name of the second parameter')
 @click.option('--mode', '-m', default='percentage', type=click.Choice(['average', 'percentage', 'time', 'holes']),
               help='Calculate average with standard deviation ("average") or percentage of holes filled. Defaults to'
-                   '"percentage". "time" mode displays average time spent on each task type.')
+                   '"percentage". "time" mode displays average time spent on each task type. "holes" calculates the '
+                   'total number of holes to be filled in each task type.')
 def render_table(*args, **options):
     """
     This script calculates completion rates for evaluation tasks based on result XML exported from Appraise evaulation

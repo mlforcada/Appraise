@@ -1,0 +1,9 @@
+Appraise has been used as a base for Ekaterina Ageeva's Google Summer of Code project, Assimilation Evaluation Toolkit.
+The scripts for creating assimilation evaluation tasks and processing their results have been created by Ekaterina
+Ageeva. These scripts can be found in /eval.
+The Appraise platform, created by Christian Federmann, was modified to accommodate the new task type.
+The modified files can be found in /appraise and include the following:
+
+- evaluation/models.py
+- evaluation/views.py
+- templates/evaulation/gisting.html

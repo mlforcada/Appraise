@@ -132,16 +132,16 @@ def computeKappa(mat):
 
     return kappa
 
+
 def checkEachLineCount(mat):
     """ Assert that each line has a constant number of ratings
         @param mat The matrix checked
         @return The number of ratings
         @throws AssertionError If lines contain different number of ratings """
-    #n = sum(mat[0])
-    n = max([sum(mat[i]) for i in range(len(mat))])
+    n = sum(mat[0])
+    #n = max([sum(mat[i]) for i in range(len(mat))])
 
-# todo the next line should definitely be active -- find out what to do for inconsistent number of raters
-    # assert all(sum(line) == n for line in mat[1:]), "Line count != %d (n value)." % n
+    assert all(sum(line) == n for line in mat[1:]), "Line count != %d (n value)." % n
     return n
 
 
@@ -160,6 +160,9 @@ def prepare_data(task, result):
     raw_sent = parse_task(sent_root)
     sent, ans = filter_tasks(raw_sent, raw_ans)
     mat = matrix(ans, sent)
+    print ''
+    for item in mat:
+        print item
     kappa = computeKappa(mat)
     return kappa
 
