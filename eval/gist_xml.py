@@ -26,7 +26,6 @@ def validate_pos(ctx, param, value):
 @click.pass_context
 @click.argument('original', type=click.File('r', encoding='utf-8'))
 @click.argument('reference', type=click.File('r', encoding='utf-8'))
-# @click.argument('tags', type=click.File('r', encoding='utf-8'))
 @click.argument('tags', type=click.Path(exists=True))
 @click.argument('task', default='task.xml', type=click.Path())
 @click.option('--lang', '-l', default='?-?',
@@ -34,9 +33,6 @@ def validate_pos(ctx, param, value):
 @click.option('--doc',
               help='Document ID. Used to calculate context for sentences from the same text.')
 @click.option('--set', help='Set ID. A unique and descriptive name for the task.')
-# @click.option('--machine', '-mt', type=click.File('r', encoding='utf-8'),
-#               help='Original text translated through Apertium, if the task should contain machine '
-#                    'translation for assistance')
 @click.option('--machine', '-mt', type=click.Path(exists=True),
               help='Path to original text translated through Apertium (.txt file),'
                    'or path to Apertium .mode file if the translation needs to be generated,'
@@ -65,9 +61,9 @@ def gist_xml(*args, **options):
     original - an untranslated text;
     reference - a literary translation of original;
     tags - the reference translation put through Apertium POS tagger.
-    You may also specify path to Apertium POS tagger here, e.g.
-    /foo/bar/apertium-eo-en/modes/en-eo-tagger.mode
-    In this case, the file will be generated using this tagger;
+    You may also specify path to Apertium morphological analyzer here, e.g.
+    /foo/bar/apertium-eo-en/modes/en-eo-anmor.mode
+    In this case, the file will be generated using this analyzer;
     machine - (optional) original text translated through Apertium,
     if the task should contain machine translation for assistance.
 
@@ -88,9 +84,9 @@ def gist_xml(*args, **options):
         elif value.endswith('.txt'):
             output = open(value).read()
         else:
-            raise click.BadParameter('Invalid argument. Please specify either'
-                                     'path to .txt file or path to'
-                                     'Apertium translator / POS tagger for your language pair.')
+            raise click.BadParameter('Invalid argument. Please specify either '
+                                     'path to .txt file or path to '
+                                     'Apertium translator / morhological analyzer for your language pair.')
         return output
 
     def generate_anmor(value, text):
@@ -123,12 +119,12 @@ def gist_xml(*args, **options):
     except KeyError:
         mt = None
 
-    # experimental: generate a morphological analysis to resolve pos ambiguity
-    # use all possible ways to determine the name of the analyzer
-    try:
-        morph = generate_anmor(options['tags'], reference)
-    except KeyError:
-        morph = None
+    # # experimental: generate a morphological analysis to resolve pos ambiguity
+    # # use all possible ways to determine the name of the analyzer
+    # try:
+    #     morph = generate_anmor(options['tags'], reference)
+    # except KeyError:
+    #     morph = None
 
     # determine task type
     keyword = False
@@ -156,6 +152,9 @@ def gist_xml(*args, **options):
         pass
     except AttributeError:  # or if it's None
         pass
+
+# everything goes through anmor now, no more tagger mode, so tags and morph are the same
+    morph = tags
 
     prepare_xml(reference,
                 tags,

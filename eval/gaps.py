@@ -7,8 +7,6 @@ from collections import OrderedDict
 from text_generator import generate_task, generate_xml
 from math import ceil
 
-# todo (maybe) rewrite args as a dictionary
-
 
 def generate_morphodict(morph):
     def tagger(t):

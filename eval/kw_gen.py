@@ -110,7 +110,7 @@ def invert(dictionary):
 
 def generate_keywords(orig, tagged_st, multiple_choice, kw, pos_list):
     words = orig.split(' ')
-    dictionary = tag_pairing.start(orig, tagged_st)
+    dictionary = tag_pairing.start(orig, tagged_st)  # form, lemma, tags
     stopwords, good_words = pos_filter(dictionary, pos_list)
     if kw:
         #stopwords, good_words = pos_filter(dictionary, pos_list)
