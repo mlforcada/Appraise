@@ -7,7 +7,6 @@ from operator import itemgetter
 
 def similarity(word1, word2, gr, pos_tags):
     pos = ''
-    gr.add_edge(word1[0], word1[0], {'weight': 99})  # should always have a choice for the original word in the gap
     for tag in pos_tags:
         if tag in word1[1][1]:
             pos = tag
@@ -17,6 +16,7 @@ def similarity(word1, word2, gr, pos_tags):
         tags2 = set(word2[1][1])
         common_tags = tags1.intersection(tags2)
         gr.add_edge(word1[0], word2[0], {'weight': len(common_tags)})
+    gr.add_edge(word1[0], word1[0], {'weight': 99})  # should always have a choice for the original word in the gap
     return
 
 
@@ -33,4 +33,5 @@ def generate_choices(words, kw, n=3):  # n for number of choices
         top = [item for (item, score) in records[:n]]
         alternatives[word] = top
     filtered = [(form, alternatives[form]) for form in kw]
+    # fixme choices should be the same case as input, not lowercase
     return filtered

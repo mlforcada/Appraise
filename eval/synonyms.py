@@ -35,6 +35,7 @@ def parse_task(task):
 def update_counters(ans, counters):
     """This updates the answer counters from each new answer string and returns new counter lists"""
     for i in range(len(counters)):
+        #if ans[i].strip(' '):
             counters[i][ans[i].strip(' ').lower()] += 1
     return counters
 
@@ -81,9 +82,11 @@ def format_output(l):
         for item in data:
             if item:
                 answer, counter = item
-                line = u'{2} \r\nKey: {0}\r\nSynonyms: {1}\r\n\r\n'.format(answer, ', '.join(counter.keys()),
+                del counter[u'']
+                if counter:
+                    line = u'{2} \r\nKey: {0}\r\nSynonyms: {1}\r\n\r\n'.format(answer, ', '.join(counter.keys()),
                                                                                                sentence)
-                formatted += line
+                    formatted += line
     return formatted
 
 
@@ -125,8 +128,7 @@ def find_synonyms(*args, **options):
     The script writes the results to path specified in OUTPUT, giving the sentence, the word and its
     suggested synonyms.
     """
-# todo write a note about clumping task xmls into one: must add a root tag. write a script maybe?
-# todo add a check for unmodified task files
+
     answers = options['result'].read().encode('utf-8')
     sentences = options['task'].read().encode('utf-8')
 
@@ -141,8 +143,6 @@ def find_synonyms(*args, **options):
         data = match(sent, ans, options['threshold'])
         options['output'].write(format_output(data))
 
-# todo also ignore empty answers
-    # fixme result files do not necessarily contain all the tasks. must check by id, not just zip
     return
 
 if __name__ == '__main__':

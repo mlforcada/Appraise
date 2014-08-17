@@ -26,7 +26,7 @@ def determine_task_type(f):
 def find_answers(sentences):
     answers = []
     for sentence in sentences:
-        bracketed_words = re.findall('{[\w ]+}', sentence, flags=re.U)
+        bracketed_words = re.findall('{.+?}', sentence, flags=re.U)
         answers += bracketed_words
     return [answer.strip('{}') for answer in answers]
 

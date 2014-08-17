@@ -12,8 +12,9 @@ import codecs
 
 
 def split_sentences(stream):
-    pattern = re.compile('.*?[.?!]+[ ]?')
-    sentences = re.findall(pattern, stream)
+    # pattern = re.compile('.*?[.?!]+[ ]?')
+    # sentences = re.findall(pattern, stream)
+    sentences = stream.split('\n')
     sentences = [sentence.strip() for sentence in sentences]
     return sentences
 
@@ -106,14 +107,14 @@ def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, 
     if batch:
         path = ''.join(output.split('.')[:-1])
         mt_file = codecs.open(path+'-mt.xml', 'w', 'utf-8')
-        mt_file.write(xml.replace('hide-source="False"', 'hide-source="True"'))
+        mt_file.write(xml.replace('hide-source="False"', 'hide-source="True"').replace(':both"', ':mt"'))
         mt_file.close()
         src_file = codecs.open(path+'-src.xml', 'w', 'utf-8')
         no_mt_xml = re.sub('<reference>.*?</reference>', '', xml)
-        src_file.write(no_mt_xml)
+        src_file.write(no_mt_xml.replace(':both"', ':src"'))
         src_file.close()
         none_file = codecs.open(path+'-none.xml', 'w', 'utf-8')
-        none_file.write(no_mt_xml.replace('hide-source="False"', 'hide-source="True"'))
+        none_file.write(no_mt_xml.replace('hide-source="False"', 'hide-source="True"').replace(':both"', ':none"'))
         none_file.close()
 
     return

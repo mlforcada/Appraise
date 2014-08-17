@@ -23,12 +23,9 @@ def validate_pos(ctx, param, value):
 @click.pass_context
 @click.argument('original', type=click.File('r', encoding='utf-8'))
 @click.argument('reference', type=click.File('r', encoding='utf-8'))
-#@click.argument('tags', type=click.File('r', encoding='utf-8'))
 @click.argument('tags', type=click.Path(exists=True))
 @click.argument('task', default='task.txt', type=click.File('w', encoding='utf-8'))
 @click.argument('keys', default='keys.txt', type=click.File('w', encoding='utf-8'))
-#@click.option('--machine', '-mt', type=click.File('r', encoding='utf-8'), help='Original text translated through Apertium, if the task should '
-#                                                       'contain machine translation for assistance')
 @click.option('--machine', '-mt', type=click.Path(exists=True),
               help='Path to original text translated through Apertium (.txt file),'
                    'or path to Apertium .mode file if the translation needs to be generated,'
@@ -42,6 +39,7 @@ def validate_pos(ctx, param, value):
                                                                              'total number of words in the text')
 @click.option('--density', '-d', default=50, type=click.IntRange(0, 100), help='A percentage of words to be removed (0-100)')
 @click.option('--pos', '-p', default='blah', callback=validate_pos, help='Specify POS to be removed ("n, vblex")')
+@click.option('--hide_orig', '-hd', default=False, flag_value=True, help='Hide source-language sentences from the task.')
 def gist_eval(*args, **options):
 
     """The gist_eval program produces sets of tasks for gisting evaluation
@@ -51,10 +49,10 @@ def gist_eval(*args, **options):
     \b
     original — an untranslated text;
     reference — a literary translation of original;
-    tags — the reference translation put through Apertium POS tagger.
-    You may also specify path to Apertium POS tagger here, e.g.
-    /apertium-eo-en/modes/en-eo-tagger.mode
-    In this case, the file will be generated using this tagger;
+    tags — the reference translation put through Apertium morphological analyzer.
+    You may also specify path to Apertium morphological analyzer here, e.g.
+    /apertium-eo-en/modes/en-eo-morph.mode
+    In this case, the file will be generated using this analyzer;
     machine — (optional) original text translated through Apertium,
     if the task should contain machine translation for assistance.
     You may also specify path to Apertium translator for your language
@@ -105,18 +103,28 @@ def gist_eval(*args, **options):
     elif options['mode'] == 'lemmas':
         lemmas = True
         keyword = True
+
+    try:
+        tags = tags.decode('utf-8')
+        mt = mt.decode('utf-8')
+    except UnicodeEncodeError:  # if it was unicode already
+        pass
+    except AttributeError:  # or if it's None
+        pass
+
     prepare_text(reference,
-               tags,
-               original,
-               keyword,
-               options['relative'],
-               options['density'] / 100.0,
-               multiple_choice,
-               lemmas,
-               mt,
-               options['pos'],
-               options['task'],
-               options['keys'])
+                 tags,
+                 original,
+                 keyword,
+                 options['relative'],
+                 options['density'] / 100.0,
+                 multiple_choice,
+                 lemmas,
+                 mt,
+                 options['pos'],
+                 options['task'],
+                 options['keys'],
+                 options['hide_orig'])
 
 if __name__ == '__main__':
     gist_eval()

@@ -31,7 +31,7 @@ def draw_sentences(src, ref, mt, tag, morph, n):
         print 'Error: the parallel texts contain different number of sentences. Please check your files.'
         return
     pairs = [(sent1[i].strip('\r\n'), sent2[i].strip('\r\n'), sent_mt[i].strip('\r\n'),
-              sent_tag[i].strip('\r\n'), sent_morph[i].strip('\r\n')) for i in range(sent1)
+              sent_tag[i].strip('\r\n'), sent_morph[i].strip('\r\n')) for i in range(len(sent1))
              if len(sent1[i].split(' ')) >= 10]
     if len(pairs) < n:
         print 'Error: trying to draw more sentences (%d) than available (%d)' % (n, len(pairs))
@@ -74,9 +74,9 @@ def generate_texts(array, numbers):
             machine.append(mt)
             tagged.append(tag)
             morph.append(mrp)
-    return ' '.join(source), ' '.join(reference), ' '.join(machine), ' '.join(tagged), ' '.join(morph)
+    return '\n'.join(source), '\n'.join(reference), '\n'.join(machine), '\n'.join(tagged), '\n'.join(morph)
 
-
+# todo make sure pos is a list
 def parse_mode(s):
     def validate_pos(value):
         default_pos = ['n', 'vblex', 'vbmod', 'vbser', 'vbhaver', 'vaux', 'adj', 'post', 'adv', 'preadv', 'postadv', 'mod',
@@ -112,7 +112,6 @@ def parse_mode(s):
         '-m': '-mode',
         '-k': '-keyword',
         '-r': '-relative',
-        '-p': '-pos',
         '-hd': '-hide_orig',
         '-d': '-density'
     }
@@ -149,15 +148,15 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.pass_context
 @click.argument('original', type=click.File('r', encoding='utf-8'))
 @click.argument('reference', type=click.File('r', encoding='utf-8'))
-@click.argument('sentences', type=click.INT())
-@click.argument('groups', type=click.INT())
+@click.argument('sentences', type=click.INT)
+@click.argument('groups', type=click.INT)
 @click.argument('mt_path', type=click.Path())
 @click.argument('morph_path', type=click.Path())
 @click.argument('modes', nargs=-1)
 @click.option('--dir', help='Path to the directory where task files will be written.')
 @click.option('--lang', '-l', default='?-?',
               help="Codes for source and target languages, separated by hyphen, e.g. 'eo-en'.")
-def everything(**options):
+def everything(*args, **options):
     """
     This script generates tasks for evaluation of Apertium language pairs from a pair of parallel texts, and evenly
     distributes sentences in different modes among the evaluators.
@@ -285,3 +284,6 @@ def everything(**options):
                         morph,
                         None  # this is for batch -- definitely not here
                         )
+
+if __name__ == '__main__':
+    everything()
