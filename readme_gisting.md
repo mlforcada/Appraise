@@ -77,7 +77,7 @@ c.	Importing new tasks into the database
 -----------------------------------------
 In Appraise, the tasks are presented in XML format. To add tasks to the database, access the administrative part of the site at /appraise/admin. A superuser account is required. In the site admin, select “EvaluationTask objects” to see available tasks. In this menu, click “Add Evaluation Task object” in the right upper corner to add new task. Enter a descriptive task name, select task type (“Gisting”), XML source file (will be described below). Also enter user instructions in task description and select the users who are allowed to complete the task. Click “save” in the lower right corner to add the task. There are also EvaluationItem objects, which will be generated automatically from the task, and EvaluationResult objects, which will be created as the evaluators submit their work. 
 
-The toolkit comes with scripts to generate XML source files from parallel texts. The script to run iscalled gist_xml.py. In the folder with the script run
+The toolkit comes with scripts to generate XML source files from parallel texts. The script to run is called gist_xml.py. In the folder with the script run
 ```sh
 $ python gist_xml.py –h
 ```
@@ -90,7 +90,7 @@ $ gist_xml ORIGINAL REFERENCE TAGS
 where 
 original is a text in L1, 
 reference is the same text in literary translation into L2, and 
-tags is the reference text put through Apertium part-of-speech tagger (see notes below).
+tags is the reference text put through Apertium morphological analyzer (see notes below).
 The available options include:
 * -mt, --machine FILENAME – original text translated through Apertium, if the tasks should contain
 machine translation as a tip for evaluator;
@@ -122,8 +122,10 @@ modes. Each Apertium language pair contains the /modes folder with .mode files. 
 modes are called L1-L2.mode, where L1 and L2 are abbreviations for languages of the language pair. These are the modes that
  should be used to generate machine translation. For example, if you translate a text from Esperanto into English, you
   would specify “/foo/apertium-eo-en/modes/eo-en.mode” for the “--machine" option. To generate tagged text, specify path
-   to Apertium tagger mode for your language pair, e.g. /foo/apertium-eo-en/modes/eo-en-tagger.mode. See your Apertium
+   to Apertium morphological analyzer mode for your language pair, e.g. /foo/apertium-eo-en/modes/eo-en-morph.mode. See your Apertium
    folder for mode names.
+
+See the readme in /eval folder for details on other scripts for task generation and checking.
 
 
 [1]:https://github.com/cfedermann/Appraise/
