@@ -5,7 +5,7 @@ import random
 import sh
 import uuid
 from gaps import prepare_xml
-from task_spread import distribute
+from task_spread import no_cli_dist
 import click
 
 
@@ -112,7 +112,6 @@ def parse_mode(s):
         '-m': '-mode',
         '-k': '-keyword',
         '-r': '-relative',
-        '-p': '-pos',
         '-hd': '-hide_orig',
         '-d': '-density'
     }
@@ -231,7 +230,7 @@ def everything(*args, **options):
         'groups': groups,
         'modes': modes_num
     }
-    dist = distribute(**kwargs)
+    dist = no_cli_dist(**kwargs)
 
     for group_num in range(len(dist)):
         for mode_num in range(len(dist[group_num])):
