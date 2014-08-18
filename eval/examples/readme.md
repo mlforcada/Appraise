@@ -1,0 +1,2 @@
+This folder contains sample files for gisting evaluation tasks.
+*sample_source.txt* is a text in Esperanto. *sample_reference.txt* is a parallel text in English. *sample_mt.txt* is *sample_source.txt* translated through Apertium eo-en. *sample_morph.txt* is *sample_reference.txt* processed with Apertium eo-en morphological analyzer. Note that the latter two files are generated automatically on task creation. *sample_task.xml*, *sample_task.txt* and *sample_keys.txt* are examples of tasks created with the toolkit from the source files provided.

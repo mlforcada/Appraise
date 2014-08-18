@@ -1,0 +1,8 @@
+1: free
+2: equal
+3: endowed
+4: conscience
+5: spirit
+6: brotherhood
+7: life
+8: person

@@ -1,0 +1,9 @@
+<set id="91294604d7c64ad1b9bc649295225e07" source-language="eo" target-language="en"><seg id="1" doc-id="53e2117468ce4cd7a0973b3437cc8c99" hide-source="False" type="20:both"><source>Chiuj homoj estas denaske liberaj kaj egalaj lau digno kaj rajtoj.</source>
+<reference>Chiuj folks are innately free and equal lau dignity and rights.</reference>
+<translation system="Apertium" type="simple" fill=";" keys="free;rights">All human beings are born { } and equal in dignity and { }.</translation></seg>
+<seg id="2" doc-id="53e2117468ce4cd7a0973b3437cc8c99" hide-source="False" type="20:both"><source>Ili posedas racion kaj konsciencon, kaj devus konduti unu al alia en spirito de frateco.</source>
+<reference>They own reason and conscience, and should act one to another in spirit of brotherhood.</reference>
+<translation system="Apertium" type="simple" fill=";;;" keys="reason;act;spirit;brotherhood">They are endowed with { } and conscience and should { } towards one another in a { } of { }.</translation></seg>
+<seg id="3" doc-id="53e2117468ce4cd7a0973b3437cc8c99" hide-source="False" type="20:both"><source>Chiu havas la rajtojn je vivo, libereco kaj persona sekureco.</source>
+<reference>Chiu have the rights in life, freedom and personal security.</reference>
+<translation system="Apertium" type="simple" fill=";" keys="life;person">Everyone has the right to { }, liberty and security of { }.</translation></seg></set>

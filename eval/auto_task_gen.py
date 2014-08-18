@@ -60,7 +60,7 @@ def generate_texts(array, numbers):
     numbers: a string of semicolon-separated integers which correspond to sentence indices
     Generates five text strings to be fed into task generator: source, reference, mt, tagged and morph
     """
-    indices = numbers.split(';')
+    indices = [int(i) for i in numbers.split(';')]
     source = []
     reference = []
     machine = []
@@ -76,7 +76,7 @@ def generate_texts(array, numbers):
             morph.append(mrp)
     return '\n'.join(source), '\n'.join(reference), '\n'.join(machine), '\n'.join(tagged), '\n'.join(morph)
 
-# todo make sure pos is a list
+
 def parse_mode(s):
     def validate_pos(value):
         default_pos = ['n', 'vblex', 'vbmod', 'vbser', 'vbhaver', 'vaux', 'adj', 'post', 'adv', 'preadv', 'postadv', 'mod',
@@ -95,7 +95,7 @@ def parse_mode(s):
             return default_pos
 
     options = dict((e if len(e) > 1 else (e[0], True) for e in (elem.split()
-                    for elem in ('-'+d for d in s.split('-') if d))))
+                    for elem in ('-'+d for d in s.strip("'").split('-') if d))))
 
     try:
         val = options['-p']
@@ -112,6 +112,7 @@ def parse_mode(s):
         '-m': '-mode',
         '-k': '-keyword',
         '-r': '-relative',
+        '-p': '-pos',
         '-hd': '-hide_orig',
         '-d': '-density'
     }
@@ -240,7 +241,7 @@ def everything(*args, **options):
 
             # see if need to pass mt text
             if opt_dict['machine']:
-                mode_mt = mt
+                mode_mt = machine
             else:
                 mode_mt = None
 
@@ -257,9 +258,13 @@ def everything(*args, **options):
                 keyword = True
 
             # generate set and doc ids, parse language pair
-            if not options['doc']:
+            try:
+                options['doc']
+            except KeyError:
                 options['doc'] = uuid.uuid4().hex
-            if not options['set']:
+            try:
+                options['set']
+            except KeyError:
                 options['set'] = uuid.uuid4().hex
             src_lang, target_lang = options['lang'].split('-')
 
@@ -270,7 +275,7 @@ def everything(*args, **options):
                         source,
                         keyword,
                         opt_dict['relative'],
-                        opt_dict['density'] / 100.0,
+                        float(opt_dict['density']) / 100.0,
                         multiple_choice,
                         lemmas,
                         mode_mt,
