@@ -131,7 +131,7 @@ def prepare_text(reference, tagged, original, keyword, relative_density, gap_den
     stream, omit, inv_lemm = generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, relative_density,
                                            gap_density, tagged)
 
-    stream = ' '.join([gapify_sentence(sentence, omit, gap_density) for sentence in split_sentences(stream)])
+    stream = '\n'.join([gapify_sentence(sentence, omit, gap_density) for sentence in split_sentences(stream)])
     bracketed_words = re.findall('{[\w ]+}', stream, flags=re.U)
     keys = [str(i + 1) + ': ' + bracketed_words[i].strip('{}') for i in range(len(bracketed_words))]
 
