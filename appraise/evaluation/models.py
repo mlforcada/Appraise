@@ -605,6 +605,13 @@ class EvaluationResult(models.Model):
                     correct = sum([eval(item.split(',')[1]) for item in res])
                     answers = ', '.join([item.split(',')[0] for item in res])
                     self.results = u'correct: {0}/{1}, answers: {2}'.format(str(correct), str(total), answers)
+
+                elif _task_type == 'Document-level gisting':
+                    res = self.raw_result.split(';')
+                    total = len(res)
+                    correct = sum([eval(item.split(',')[1]) for item in res])
+                    answers = ', '.join([item.split(',')[0] for item in res])
+                    self.results = u'correct: {0}/{1}, answers: {2}'.format(str(correct), str(total), answers)
             
             # pylint: disable-msg=W0703
             except Exception, msg:
