@@ -33,6 +33,7 @@ APPRAISE_TASK_TYPE_CHOICES = (
   ('4', 'Error classification'),
   ('5', '3-Way Ranking'),
   ('6', 'Gisting'),
+  ('7', 'Document-level gisting'),
 )
 
 

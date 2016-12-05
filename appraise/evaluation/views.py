@@ -701,6 +701,118 @@ def _handle_gisting(request, task, items):
 
 
 @login_required
+def _handle_docgisting(request, task, items):
+    start_datetime = datetime.now()
+    form_valid = False
+
+    if request.method == "POST":
+        item_id = request.POST.get('item_id', None)
+        now_timestamp = request.POST.get('now', None)
+
+        # save user-filled form
+        answers = {}
+        for key, answer in sorted(request.POST.items()):
+            if key.startswith('id'):
+                prefix, number = key.split('-')
+                answers[number] = answer
+
+        form_valid = all((item_id, now_timestamp))
+
+    if form_valid:
+        # calculate duration for this result
+        now_datetime = datetime.fromtimestamp(float(now_timestamp))
+        duration = start_datetime - now_datetime
+
+        # get the EvaluationItem that will be linked to this result
+        current_item = get_object_or_404(EvaluationItem, pk=int(item_id))
+
+        # check answers and compute _raw_result
+        keys = current_item.translations[0][1]['keys']
+        result = []
+        if keys:
+            for i in range(len(keys.split(';'))):
+                current_key = keys.split(';')[i]
+                current_answer = answers[str(i+1)]
+                correct = False
+                if current_answer == current_key:
+                    correct = True
+                result.append((current_answer, correct))
+        else:
+            result.append(('no gaps', True))
+
+        # unpack raw result, because it must be a string
+        _raw_result = ';'.join([','.join((answer, str(correct))) for answer, correct in result])
+        # save the Result object to database
+        _save_results(current_item, request.user, duration, _raw_result)
+
+    # Sereni's notes: this chunk is standard for all task types, it calculates the next item to display. changed nothing.
+    item = _find_next_item_to_process(items, request.user, task.random_order)
+    if not item:
+        return redirect('appraise.evaluation.views.overview')
+
+    # this block converts gap placeholders to html based on task type and fill attributes derived from xml
+    task_type = item.translations[0][1]['type']
+    if task_type == 'simple' or task_type == 'lemmas':
+
+        # prepare values
+        field_code = u'<input type="text" name="id-{0!s}" value="{1}">'
+        try:
+            fill = item.translations[0][1]['fill']
+        except KeyError:  # a simple gap task without fill
+            fill = None
+        if fill:
+            values = fill.split(u';')
+        else:
+            values = [u'']*10  # a placeholder for simple gaps
+
+        # generate the sentence to display, replace all gaps with appropriate html code
+        sentence = item.translations[0][0]  # Sereni's notes: we assume 1 translation per item.
+        # translations are tuples of ('text', {attributes}).
+        i = 1  # this is a counter to give our text fields unique identifiers
+        while True:
+            try:
+                sentence = sentence.replace(u'{ }', field_code.format(i, values[i-1]), 1)
+            except IndexError:  # we're out of gaps, quit
+                break
+            i += 1
+
+    elif task_type == 'choices':
+
+        # prepare values, generate html
+        fill = item.translations[0][1]['fill']
+        choices = fill.split(u';')
+        field_code = u'<select name="id-{0!s}">{1}</select>'
+        gap_codes = []
+        for choice in choices:
+            choice_list = choice.split(u',')
+            shuffle(choice_list)
+            options = [u'<option value="">(select)</option>']  # add a blank option to start with
+            options += [u'<option value="{0}">{0}</option>'.format(word) for word in choice_list]
+            gap_codes.append(field_code.format(len(gap_codes)+1, u''.join(options)))
+        sentence = item.translations[0][0]
+
+        # replace gap placeholders with html code
+        for i in range(len(gap_codes)):
+            sentence = sentence.replace(u'{ }', gap_codes[i], 1)
+
+    source_text, reference_text = _compute_context_for_item(item)
+    _finished, _total = task.get_finished_for_user(request.user)
+    dictionary = {
+        'action_url': request.path,
+        'description': task.description,
+        'hide_source': eval(item.attributes['hide-source']),
+        'item_id': item.id,
+        'now': mktime(datetime.now().timetuple()),
+        'reference_text': reference_text,
+        'task_progress': '{0:03d}/{1:03d}'.format(_finished, _total),
+        'translation': sentence,
+        'source_text': source_text,
+    }
+    print 'hide-source: ', len(item.attributes['hide-source']), type(item.attributes['hide-source'])
+    return render(request, 'evaluation/docgisting.html', dictionary)
+
+
+@login_required
 def task_handler(request, task_id):
     """
     General task handler.
@@ -734,6 +846,9 @@ def task_handler(request, task_id):
 
     elif _task_type == 'Gisting':
         return _handle_gisting(request, task, items)
+    
+    elif _task_type == 'Document-level gisting':
+        return _handle_docgisting(request, task, items)
     
     _msg = 'No handler for task type: "{0}"'.format(_task_type)
     raise NotImplementedError, _msg
