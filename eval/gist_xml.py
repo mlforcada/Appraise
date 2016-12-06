@@ -83,9 +83,27 @@ def gist_xml(*args, **options):
             output = p.stdout.decode('utf-8')
         elif value.endswith('.txt'):
             output = open(value).read()
+	elif value.endswith('.lst'):
+	    # get a list of machine-translated documents and insert their contents here
+            # the first line is an offset, the rest are filenames
+            # Newlines are replaced by "@@@" which will be processed later by a custom filter in the docgisting.html
+            # template (ugly hack)
+            f = open(value)
+            offset = f.readline().rstrip('\n')
+            if not offset.endswith('/'):
+               offset = offset + '/'
+            output = ""
+            while True:
+               mtfilename = f.readline()
+               if mtfilename == '':
+                  break
+               mtcontents = open((offset + mtfilename).rstrip('\n')).read()
+               output = output + "@@@".join(mtcontents.split("\n")) + "\n"
         else:
-            raise click.BadParameter('Invalid argument. Please specify either '
-                                     'path to .txt file or path to '
+            raise click.BadParameter('Invalid argument. Please specify '
+                                     'path to .txt file, '
+                                     'path to .lst file, '
+                                     'or path to '
                                      'Apertium translator / morhological analyzer for your language pair.')
         return output
 
