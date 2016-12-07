@@ -228,7 +228,7 @@ def everything(*args, **options):
         f = open(value)
         offset = f.readline().rstrip('\n')
         if not offset.endswith('/'):
-        offset = offset + '/'
+           offset = offset + '/'
         output = ""
         while True:
            mtfilename = f.readline()
