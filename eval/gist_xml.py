@@ -82,7 +82,9 @@ def gist_xml(*args, **options):
             p = sh.apertium('-u -d {0}'.format(path), mode, _in=input.encode('utf-8'), _encoding='utf-8')
             output = p.stdout.decode('utf-8')
         elif value.endswith('.txt'):
-            output = open(value).read()
+            # output = open(value).read()
+            output = (open(value).read()).rstrip('\n')
+            
 	elif value.endswith('.lst'):
 	    # get a list of machine-translated documents and insert their contents here
             # the first line is an offset, the rest are filenames
@@ -98,7 +100,7 @@ def gist_xml(*args, **options):
                if mtfilename == '':
                   break
                mtcontents = open((offset + mtfilename).rstrip('\n')).read()
-               output = output + "@@@".join(mtcontents.split("\n")) + "\n"
+               output = output + "@@@".join(mtcontents.split("\n")) + "\n"   # not sure about this last \n
         else:
             raise click.BadParameter('Invalid argument. Please specify '
                                      'path to .txt file, '
@@ -124,8 +126,20 @@ def gist_xml(*args, **options):
         return output
 
     # open or generate tagged text
-    original = options['original'].read()
-    reference = options['reference'].read()
+    
+    # original = options['original'].read()
+    # reference = options['reference'].read()
+    # last '\n' was producing empty segments in the .xml file when the
+    # file contained an end-of-line
+    original = (options['original'].read()).rstrip('\n')
+    reference = (options['reference'].read()).rstrip('\n')
+    #MLFDEBUG
+    #seq=reference.split('\n')
+    #length=len(seq)
+    #for i in range(0,length-1):
+    #   print i, ":[",  seq[i], "]"	
+    #MLFGUBED
+
     tags = launch_apertium(options['tags'], reference)
 
     # open or generate machine translation
@@ -173,6 +187,12 @@ def gist_xml(*args, **options):
 
 # everything goes through anmor now, no more tagger mode, so tags and morph are the same
     morph = tags
+    #MLFDEBUG
+    seq=reference.split('\n')
+    length=len(seq)
+    for i in range(0,length-1):
+       print i, ":[",  seq[i], "]"	
+    #MLFGUBED
 
     prepare_xml(reference,
                 tags,
