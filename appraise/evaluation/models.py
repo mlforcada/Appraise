@@ -252,6 +252,9 @@ class EvaluationTask(models.Model):
 
         elif _task_type == 'Gisting':
             pass
+
+        elif _task_type == 'Document-level Gisting':
+            pass
         
         return _header
     
@@ -304,6 +307,9 @@ class EvaluationTask(models.Model):
             pass
 
         elif _task_type == 'Gisting':
+            pass
+
+        elif _task_type == 'Document-level Gisting':
             pass
         
         return _status
@@ -639,6 +645,10 @@ class EvaluationResult(models.Model):
 
         elif _task_type == 'Gisting':
             return self.export_to_gisting_xml()
+            
+        elif _task_type == 'Document-level Gisting':
+            return self.export_to_docgisting_xml()
+
     
     def export_to_quality_checking_xml(self):
         """
@@ -803,6 +813,24 @@ class EvaluationResult(models.Model):
         Renders this EvaluationResult as Gisting XML String.
         """
         template = get_template('evaluation/result_gisting.xml')
+
+        _attr = self.item.attributes.items()
+        attributes = ' '.join(['{}="{}"'.format(k, v) for k, v in _attr])
+
+        context = {
+            'attributes': attributes,
+            'duration': '{}'.format(self.duration),
+            'result': self.results,
+            'user': self.user,
+        }
+
+        return template.render(Context(context))
+
+    def export_to_docgisting_xml(self):
+        """
+        Renders this EvaluationResult as Document-level Gisting XML String.
+        """
+        template = get_template('evaluation/result_docgisting.xml')
 
         _attr = self.item.attributes.items()
         attributes = ' '.join(['{}="{}"'.format(k, v) for k, v in _attr])
