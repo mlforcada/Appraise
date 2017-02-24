@@ -133,12 +133,6 @@ def gist_xml(*args, **options):
     # file contained an end-of-line
     original = (options['original'].read()).rstrip('\n')
     reference = (options['reference'].read()).rstrip('\n')
-    #MLFDEBUG
-    #seq=reference.split('\n')
-    #length=len(seq)
-    #for i in range(0,length-1):
-    #   print i, ":[",  seq[i], "]"	
-    #MLFGUBED
 
     tags = launch_apertium(options['tags'], reference)
 
@@ -188,10 +182,10 @@ def gist_xml(*args, **options):
 # everything goes through anmor now, no more tagger mode, so tags and morph are the same
     morph = tags
     #MLFDEBUG
-    seq=reference.split('\n')
-    length=len(seq)
-    for i in range(0,length-1):
-       print i, ":[",  seq[i], "]"	
+    #seq=reference.split('\n')
+    #length=len(seq)
+    #for i in range(0,length-1):
+    #   print i, ":[",  seq[i], "]"	
     #MLFGUBED
 
     prepare_xml(reference,

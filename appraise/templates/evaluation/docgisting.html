@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load atatat_to_newline %} 
+{% load bstrong %} 
 
 {% block content %}
 
@@ -32,7 +33,7 @@
 <blockquote>
 <p><strong>Machine-translated text:</strong><p>
 <p>
-{{reference_text.1|atatat_to_newline|linebreaksbr}}
+{{reference_text.1|atatat_to_newline|bstrong|linebreaksbr}}
 </p>
 </blockquote>
 </div>

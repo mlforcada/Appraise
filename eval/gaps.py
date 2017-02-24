@@ -128,6 +128,7 @@ def generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, rela
 
 def prepare_text(reference, tagged, original, keyword, relative_density, gap_density, multiple_choice, lemmas, mt, pos,
                  output, key, hide_source):
+
     stream, omit, inv_lemm = generate_gaps(reference, tagged, multiple_choice, keyword, lemmas, pos, relative_density,
                                            gap_density, tagged)
 

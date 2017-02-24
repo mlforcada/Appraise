@@ -48,9 +48,16 @@ def generate_task(task, keys, mt, original, output, key, hide_source):
 def generate_xml(task, mt, original, output, task_type, doc_id, set_id, source, target, hide_source, batch, density):
     def compute_fill_and_keys(sentence, task_type):
         """This extracts values from brackets and generates the parameters fill and keys for xml"""
+    #MLFDEBUG
+        seq=task.split('\n')
+        length=len(seq)
+        print "length=", length
+        for i in range(0,length):
+           print i, ":[",  seq[i], "]"	
+    #MLFGUBED
+
         keys = []
         fill = []
-
         if task_type == 'simple':
             keys = [item.strip('{}') for item in re.findall('{[\w \']+}', sentence, flags=re.U)]
             fill = ['']*len(keys)
