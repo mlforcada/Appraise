@@ -253,7 +253,7 @@ class EvaluationTask(models.Model):
         elif _task_type == 'Gisting':
             pass
 
-        elif _task_type == 'Document-level Gisting':
+        elif _task_type == 'Document-level gisting':
             pass
         
         return _header
@@ -309,7 +309,7 @@ class EvaluationTask(models.Model):
         elif _task_type == 'Gisting':
             pass
 
-        elif _task_type == 'Document-level Gisting':
+        elif _task_type == 'Document-level gisting':
             pass
         
         return _status
@@ -646,7 +646,7 @@ class EvaluationResult(models.Model):
         elif _task_type == 'Gisting':
             return self.export_to_gisting_xml()
             
-        elif _task_type == 'Document-level Gisting':
+        elif _task_type == 'Document-level gisting':
             return self.export_to_docgisting_xml()
 
     
@@ -828,7 +828,7 @@ class EvaluationResult(models.Model):
 
     def export_to_docgisting_xml(self):
         """
-        Renders this EvaluationResult as Document-level Gisting XML String.
+        Renders this EvaluationResult as Document-level gisting XML String.
         """
         template = get_template('evaluation/result_docgisting.xml')
 
