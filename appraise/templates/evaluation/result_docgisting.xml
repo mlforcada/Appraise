@@ -1,0 +1,1 @@
+<gisting-item{% if attributes%} {{attributes|safe}}{% endif %} duration="{{duration}}" user="{{user}}" result="{{result}}" />
