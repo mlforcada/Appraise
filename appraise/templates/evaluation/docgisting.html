@@ -33,13 +33,15 @@
 <blockquote>
 <p><strong>Machine-translated text:</strong><p>
 <p>
+{% autoescape off %}	
 {{reference_text.1|atatat_to_newline|bstrong|linebreaksbr}}
+{% endautoescape %}
 </p>
 </blockquote>
 </div>
 {% else %}
 <div class="span12">
-<blockquote>
+blockquote>
 {% if not hide_source %}
 <p><strong>{{source_text.1}}</strong></p>
 <small>Source</small>
