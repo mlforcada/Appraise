@@ -31,7 +31,7 @@
 -->
 <div class="span11">
 <blockquote>
-<p><strong>Machine-translated text:</strong><p>
+<p><strong>Instructions:</strong> Try to fill each one of the gaps in the "problem sentence" at the bottom with the most fitting <strong>single word</strong>, using information from the <em>hint text</em> (if there is one). <p>
 <p>
 {% autoescape off %}	
 {{reference_text.1|atatat_to_newline|bstrong|linebreaksbr}}
@@ -60,7 +60,7 @@ blockquote>
 <div class="span11">
 <blockquote>
     {% autoescape off %}
-<p><strong>Fill out the blanks:</strong></p>
+<p><strong>Problem sentence:</strong></p>
 <p><strong>{{translation}}</strong></p>
     {% endautoescape %}
 <!-- <small>Reference translation</small> -->
