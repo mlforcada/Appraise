@@ -38,7 +38,7 @@ using only information from the <em>hint text</em> (if there is one).
 </div>
 <hr/>
 <!-- <p> -->
-<strong>Hint text:</strong> (there may be some text highlighted)
+<strong>Hint text:</strong> (you might need to scroll to find some highlighted text)
 <!-- </p> -->
 <div style="background-color: #F0F0F0; width: 100%; height: 35vh; overflow: scroll;">
 {% autoescape off %}	
@@ -68,9 +68,13 @@ using only information from the <em>hint text</em> (if there is one).
 <div class="span11">
 <blockquote>
     {% autoescape off %}
-<p><strong>Problem sentence:</strong></p>
+<!--<p>-->
+<div>
+<strong>Problem sentence:</strong>
+<!--</p> -->
 <!-- <p> -->
-<div>{{translation}}</div>
+{{translation}}
+</div>
 <!-- </p> -->
     {% endautoescape %}
 <!-- <small>Reference translation</small> -->
