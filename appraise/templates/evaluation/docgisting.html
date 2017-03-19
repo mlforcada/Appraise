@@ -45,12 +45,13 @@ using only information from the <em>hint text</em> (if there is one).
 {{reference_text.1|atatat_to_newline|bstrong|linebreaksbr}}
 {% endautoescape %}
 </div>
+<hr/>
 </p>
 </blockquote>
 </div>
 {% else %}
 <div class="span12">
-blockquote>
+<blockquote>
 {% if not hide_source %}
 <p><strong>{{source_text.1}}</strong></p>
 <small>Source</small>
@@ -61,15 +62,12 @@ blockquote>
 </div>
 
 <form action="{{action_url}}" method="post">
-
 <input name="item_id" type="hidden" value="{{item_id}}" />
 <input name="now" type="hidden" value="{{now}}" />
-
 <div class="row">
 <div class="span11">
 <blockquote>
     {% autoescape off %}
-<hr/>
 <p><strong>Problem sentence:</strong></p>
 <!-- <p> -->
 <strong>{{translation}}</strong>
