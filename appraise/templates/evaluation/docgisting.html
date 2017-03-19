@@ -31,9 +31,15 @@
 -->
 <div class="span11">
 <blockquote>
-<strong>Instructions:</strong> Try to fill each one of the gaps in the "problem sentence" at the bottom with the most fitting <strong>single word</strong>, using only information from the <em>hint text</em> (if there is one).
+<!-- <p> -->
+<strong>Instructions:</strong> Try to fill each one of the gaps in the 
+"problem sentence" at the bottom with the most fitting <strong>single word</strong>, 
+using only information from the <em>hint text</em> (if there is one).  
+<!-- </p> -->
 <hr/>
-<p><strong>Hint text:</strong></p>
+<!-- <p> -->
+<strong>Hint text:</strong> (there may be some text highlighted)
+<!-- </p> -->
 <div style="background-color: #F0F0F0; width: 100%; height: 35vh; overflow: scroll;">
 {% autoescape off %}	
 {{reference_text.1|atatat_to_newline|bstrong|linebreaksbr}}
@@ -65,7 +71,9 @@ blockquote>
     {% autoescape off %}
 <hr/>
 <p><strong>Problem sentence:</strong></p>
-<p><strong>{{translation}}</strong></p>
+<!-- <p> -->
+<strong>{{translation}}</strong>
+<!-- </p> -->
     {% endautoescape %}
 <!-- <small>Reference translation</small> -->
 </blockquote>
