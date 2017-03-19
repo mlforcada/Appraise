@@ -4,6 +4,16 @@
 
 {% block content %}
 
+<!-- Trying to place the scroll position -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $("div").scrollTop(50);
+    });
+});
+</script>
+
 <div class="alert alert-info">
   <strong id="task_progress">{{task_progress}}</strong>
 </div>
