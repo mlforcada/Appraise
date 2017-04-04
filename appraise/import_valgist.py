@@ -58,7 +58,7 @@ if __name__ == "__main__":
     # I have to change this to import the right code
     # We have just added appraise to the system path list, hence this works.
     # Oh well, there is a problem related to settings.
-    from appraise.evaluation.models import EvaluationTask, validate_source_xml_file #, EvaluationItem
+    from appraise.evaluation.models import EvaluationTask #, validate_source_xml_file #, EvaluationItem
     # Was: from appraise.wmt14.models import HIT
     from eval.validatordocgisting import validate_task_xml_file # seems to work
     # Was: from appraise.wmt14.validators import validate_hits_xml_file
@@ -83,7 +83,7 @@ if __name__ == "__main__":
             task_xml_string = unicode(infile.read(), "utf-8")
         
         # Validate XML before trying to import anything from the given file.
-        validate_task_xml_file(task_xml_string) # working?
+        # validate_task_xml_file(task_xml_string) # working?
     
         _errors = 0
         _total = 0
@@ -96,7 +96,7 @@ if __name__ == "__main__":
                     _ = EvaluationTask(task_id=task_id, task_xml=_task_file)
             
         else:
-                    t = EvaluationTask(task_id=task_id, task_xml=_task_file)
+                    t = EvaluationTask(task_xml=_task_file, task_name="nowyes", task_type="7")
                     try:  # trying to catch the exception
                        t.save()
                     except SuspiciousOperation as e :
