@@ -84,7 +84,7 @@ if __name__ == "__main__":
         _total = 0
         _tree = fromstring(task_xml_string.encode("utf-8"))
 
-        task_id = _tree.attrib["id"]
+        task_id = _tree.attrib["id"]		
         # needed? Not passed on yet ****TODO*****        
         language_pair = '{0}2{1}'.format(_tree.attrib["source-language"],
              _tree.attrib["target-language"])
