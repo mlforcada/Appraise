@@ -945,7 +945,9 @@ def status_view(request, task_id=None):
             for user in users:
                 qset = EvaluationResult.objects.filter(user=user, item=item)
                 if qset.exists():
-                    category = str(qset[0].results)
+                    # MLF change 20170704
+                    # category = str(qset[0].results)
+                    category=(qset[0].results).encode('utf-8')
                     results.append((user.id, item.id, category))
                     raw_result_data[qset[0].raw_result] += 1
             
