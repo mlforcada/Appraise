@@ -14,7 +14,7 @@
 #  MA 02110-1301, USA.
 #  
 
-# MLF 20170517
+# MLF 20170927
 # Ugly wrapper around prepare_one_2.py to generate a set of tasks
 # Will initially write all tasks for a job in a specific directory
 # And will merge them later using a shell
@@ -34,10 +34,15 @@ parser = argparse.ArgumentParser()
 parser.add_argument("informant",help="Informant number", type=int)
 parser.add_argument('-v', '--verbose', help='Verbose Mode', dest="verbose", action='store_true',default=False)
 parser.add_argument('--dry_run', help='Dry run', dest="dry_run", action='store_true',default=False)
+parser.add_argument("--sl", help="Source language", dest="sl", default="de")
+parser.add_argument("--tl", help="Source language", dest="tl", default="en")
+parser.add_argument("--target_dir",help="Target directory", dest="target_directory", default="/tmp/")
 args = parser.parse_args()
 
 informant=args.informant
+target_directory=args.target_directory
 
+# hardwired, ugly
 raw_model = "/home/mlf/tmp/kenlm/news-commentary-v8.arpa.en"
 binary_model = "/home/mlf/tmp/kenlm/news-commentary-v8.blm.en"
 documents_root="/home/mlf/Escriptori/durham/sheffield/carol-s-data/creg/"
@@ -45,8 +50,8 @@ documents_root="/home/mlf/Escriptori/durham/sheffield/carol-s-data/creg/"
 target_directory="/tmp/"  
 
 # languages
-sl = "de"
-tl = "en"
+sl = args.sl
+tl = args.tl
 
 # conditions for configurations
 percentages = ["10", "20"]
@@ -56,6 +61,7 @@ realsystems = ["google", "moses", "systran", "bing"]
 contexts = ["--no_context", ""]
 
 # file names
+# hardwired, ugly: CREG filenames
 files = [("KU","13"),
 ("KU","15"),
 ("KU","22"),

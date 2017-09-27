@@ -1,58 +1,84 @@
 # Appraise job preparation
 
-This README does not correspond yet to the actual code — working on it
-
-
-Note that lots of this code has been obtained by modifying existing code containing other functionalities.  Remnants of the code used there are still found here. Some time would be needed to streamline this code. 
+Please note that the code here has been used for a particular set of experiments and has a lot of hardwired options that should be factored out to make it useful in other situations. Most of the instructions here may make little sense unless the details of the experiment are known.
 
 ## prepare_one_2.py
 
-Takes two files: a reference text file, a hint text file, and produces an XML results file.
-In this project, both the reference and the hint text are a single sentence.
+This script is usually not called on its own but is rather invoked by wrapper.py (see below)
 
-This is meant to be called by wrapper.py below, never directly.
+Takes two files: a reference text file, a hint text file, and produces an XML results file with a single gap-filling problem. In this project, both the reference and the hint text are a single sentence.
 
-If --no_hint is given, the hint text is ignored.
+If --no_hint is given, the hint text is ignored and not provided.
 
-One can set the percentage of gaps (e.g.  --percentage 20 for 20%), the source language (--sl), the target language (--tl) which will be used to label the XML file. A document id (--docid) is also provided.
+One can set the percentage of gaps (e.g.  --percentage 20 for 20%), the source language (--sl), the target language (--tl) which will be used to label the XML file. A document id (--docid)  and a set id (--setid) may also be  provided.
+
+A raw KenLM probability model (--raw-model) and its binarized version (--binary-model) have to be provided to poke gaps where the entropy is maximum, unless one chooses to poke them randomly (--no_entropy).
 
 If a list of stopwords is available for the language in question from package stop_words, then holes are never punched where stopwords are. 
 
 The switch --adjacent_gaps_not_ok avoids punching gaps which are adjacents or just separated by stopwords.
 
+The switch --no context causes the hint in the gap-filling problem to be a single sentence (the whole machine-translated document is not shown).
+
 The switch --system labels the system used.
 
 
-
-```
-usage: prepare_one_2.py [-h] [--percentage PERCENTAGE] [-v]
+```usage: prepare_one_2.py [-h] [--percentage PERCENTAGE]
+                        [--raw-model RAWMODELFILENAME]
+                        [--binary-model BINARYMODELFILENAME] [-v]
                         [--include_stopwords] [--include_punctuation]
                         [--no_hint] [--setid SETID] [--docid DOCID] [--sl SL]
-                        [--tl TL] [--system SYSTEM] 
-                        [--adjacent_gaps_not_ok]
+                        [--tl TL] [--system SYSTEM] [--no_entropy]
+                        [--no_context] [--adjacent_gaps_not_ok]
                         reftextfile hinttextfile resultfile
 
+positional arguments:
+  reftextfile           Reference text
+  hinttextfile          Hint text
+  resultfile            Result file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --percentage PERCENTAGE
+                        Percentage (default 10%)
+  --raw-model RAWMODELFILENAME
+                        Route of raw model (needed for entropy calculation
+  --binary-model BINARYMODELFILENAME
+                        Route of raw model (needed for entropy calculation)
+  -v, --verbose         Verbose Mode
+  --include_stopwords   Don't exclude stopwords
+  --include_punctuation
+                        Don't exclude punctuation
+  --no_hint             Provide no hint
+  --setid SETID         Evaluation set identifier
+  --docid DOCID         Document identifier
+  --sl SL               Source language
+  --tl TL               Target language
+  --system SYSTEM       MT system
+  --no_entropy          Random gaps
+  --no_context          No context but sentence
+  --adjacent_gaps_not_ok
+                        Adjacent gaps are not allowed.
 ``` 
 
 ## wrapper.py
 
 This program receives an informant number, the directory where all problem files are kept  (in directories
-such as human, google, yandex, etc., and the names of files to get from each of these directories) and generates
-a in /tmp/i where i is the informant number set of one-problem XML files that will later be merged by merger.py.
+such as human, google, moses, bing, etc., and the names of files to get from each of these directories) and generates
+a directory /tmp/i where i is the informant number set of one-problem XML files that will later be merged by merger.py.
 
-The code may be improved massively, as it has a number of hard-wired parameters such as the names of the directories (named after the systems).
+The code may be improved massively, as it has a number of hard-wired parameters such as the names of the directories (named after the systems) and the names of the actual problem files in a CREG-derived corpus prepared by Carolina Scarton (Scarton and Specia LREC 2016).
 
+Defaults are provided for --sl (de), --tl (en) and --target_directory (/tmp/).
 
 
 ```
 usage: wrapper.py [-h] [-v] [--dry_run] [--sl SL] [--tl TL]
                   [--target_dir TARGET_DIRECTORY]
-                  informant documents_root problemfiles [problemfiles ...]
+                  informant
 
 positional arguments:
   informant             Informant number
-  documents_root        root of document files
-  problemfiles          names of problems to process
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -67,11 +93,11 @@ optional arguments:
 Example:
 
 ```
-python wrapper.py  -v --sl en --tl kk 0 ../kazengex/ text1 text2 text3 text4 text5 text6 text7
+python wrapper.py  -v --sl de --tl en 0  somedirectory
 ```
 Here the informant is number 0, but it can be called in a loop:
 ```
-for i in {00..10}; do python wrapper.py  -v --sl en --tl kk $i ../kazengex/ text1 text2 text3 text4 text5 text6 text7; done
+for i in {00..59}; do python wrapper.py  -v --sl en --tl kk $i somedirectory; done
 ```
 This creates a series of directories 00, 01 etc. where the XML files for each job are stored.
 
@@ -99,7 +125,7 @@ optional arguments:
 This would usually be called after wrapper.py in a loop, to generate the job files to be uploaded to Appraise:
 
 ```
-for i in {00..10}; do python merger.py --setid $i --outfile /tmp/enkkjob$i.xml /tmp/$i/*.xml ; done
+for i in {00..59}; do python merger.py --setid $i --outfile /tmp/job$i.xml /tmp/$i/*.xml ; done
 ```
 In this case, the job files are enkkjobNN.xml 
 
