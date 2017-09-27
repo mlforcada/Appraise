@@ -1,5 +1,7 @@
 # Appraise results postprocessing
 
+This README does not correspond yet to the actual code — working on it
+
 ## filter_results.py
 
 This file will be invoked by the s2.bash shell described below. It reads an XML results file downloaded from Appraise and extracts the records corresponding to a specific user in CSV format.

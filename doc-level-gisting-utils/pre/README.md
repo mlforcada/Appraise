@@ -1,5 +1,8 @@
 # Appraise job preparation
 
+This README does not correspond yet to the actual code — working on it
+
+
 Note that lots of this code has been obtained by modifying existing code containing other functionalities.  Remnants of the code used there are still found here. Some time would be needed to streamline this code. 
 
 ## prepare_one_2.py
