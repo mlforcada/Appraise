@@ -2,7 +2,7 @@
 # Read one document-level gisting job and one result file
 # And pair keys and results 
 # select one specific user
-# write results in CSV format to standard output
+# write results  to standard output
 #
 # MLF  20171015
 import argparse
@@ -49,8 +49,10 @@ for child in outtree:
 #print "-----"
 #print outwords
 
+# Compare dictionaries and generate tentative synonym list
 for key in inwords :
     if key in outwords : 
        assert(len(inwords[key])==len(outwords[key])) # sanity check
        for i in range(len(inwords[key])) :
-           print key, i, inwords[key][i], outwords[key][i]
+           # if inwords[key][i].strip()!=outwords[key][i].strip() :
+               print key, i, inwords[key][i], outwords[key][i]
