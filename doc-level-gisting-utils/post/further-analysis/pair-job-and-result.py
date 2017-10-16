@@ -18,7 +18,7 @@ args=parser.parse_args()
 # Get job
 inxml=open(args.jobfile).read()
 intree = fromstring(inxml)
-# tree = fromstring(xml.encode("utf-8"))
+# intree = fromstring(inxml.encode("utf-8"))
 assert(intree.tag == "set")
 
 # Store results in a dictionary? Key is seg id
@@ -34,6 +34,7 @@ for child in intree:
 
 outxml=open(args.resultfile).read()
 outtree = fromstring(outxml)
+# outtree = fromstring(outxml.encode("utf-8"))
 assert(outtree.tag == "appraise-results")
 
 outwords=dict()
@@ -43,7 +44,8 @@ for child in outtree:
 			segid=grandchild.attrib["id"]
         		attrs = grandchild.attrib  # a dictionary with all attributes
                         if attrs["user"] == args.user :
-                           outwords.update({segid:((grandchild.attrib["result"].split(":"))[2]).split(",")})
+							if len(grandchild.attrib["result"])>2 :
+								outwords.update({segid:((grandchild.attrib["result"].split(":"))[2]).split(",")})
 			   # print ((grandchild.attrib["result"].split(":"))[2]).split(",")
 #print inwords
 #print "-----"
@@ -55,4 +57,4 @@ for key in inwords :
        assert(len(inwords[key])==len(outwords[key])) # sanity check
        for i in range(len(inwords[key])) :
            # if inwords[key][i].strip()!=outwords[key][i].strip() :
-               print key, i, inwords[key][i], outwords[key][i]
+               print key, i, inwords[key][i].encode("utf-8"), outwords[key][i].encode("utf-8")
