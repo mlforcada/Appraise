@@ -83,6 +83,7 @@ parser.add_argument('--tl',help="Target language", dest="tl", default="unk")
 parser.add_argument("--system", help="MT system", dest="system", default="unk")
 parser.add_argument("--no_entropy", help="Random gaps", dest="no_entropy", action="store_true", default=False)
 parser.add_argument("--no_context", help="No context but sentence", dest="no_context", action="store_true", default=False)
+parser.add_argument("--add_entropy", help="Adds entropies to XML", dest="add_entropy", action="store_true", default=False)
 parser.add_argument('--adjacent_gaps_not_ok', help="Adjacent gaps are not allowed.", dest="adjacent_gaps_not_ok", action="store_true", default=False)
 
 args = parser.parse_args()
@@ -296,16 +297,19 @@ print "________________________________________________"
 print "Problem:"
 problem=""
 solution=""
+entropies=""
 # print holelist
 for pos, word in enumerate(anss) :
 #   print pos, word
    if pos in holelist :
 #	   print pos, word, "in holelist"
-	   problem = problem + " { }" 
+	   problem = problem + " { }"
+           entropies = entropies + ";" + "{0:7.2f}".format(values[pos])  
 	   solution = solution + ";" + anss[pos]
    else :
 	   problem = problem + " " + anss[pos]
 solution=solution.lstrip(";")
+entropies=entropies.lstrip(";")
 solution=escape(solution)
 
 
@@ -318,7 +322,10 @@ print "Solution:"
 print solution
 print "________________________________________________"
 
-res.write('<translation system="{0}" type="{1}" fill="{2}" keys="{3}">\n'.format(system, "simple", ";" * (len(holelist)-1), solution))
+if args.add_entropy :
+   res.write('<translation system="{0}" type="{1}" fill="{2}" keys="{3}" entropies="{4}">\n'.format(system, "simple", ";" * (len(holelist)-1), solution,entropies))
+else :
+   res.write('<translation system="{0}" type="{1}" fill="{2}" keys="{3}">\n'.format(system, "simple", ";" * (len(holelist)-1), solution))
 res.write(escape(problem))
 res.write('</translation>\n')
 res.write('</seg>\n')
