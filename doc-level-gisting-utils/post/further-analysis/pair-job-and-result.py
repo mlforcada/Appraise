@@ -2,18 +2,25 @@
 # Read one document-level gisting job and one result file
 # And pair keys and results 
 # select one specific user
-# write results  to standard output
-#
-# MLF  20171015
+	#
+# MLF  20171024
 import argparse
+import sys
 from xml.etree.ElementTree import Element, fromstring, tostring
+import datetime 
 
 # Argument parsing
 parser = argparse.ArgumentParser()
 parser.add_argument("jobfile",   help="Input job file uploaded to Appraise")
 parser.add_argument("resultfile",help="Input job file uploaded to Appraise")
 parser.add_argument("user",help="Select records from this user")
+parser.add_argument("--errors",action="store",default=False)
+parser.add_argument("--synonym_file",action="store",default=False)	
 args=parser.parse_args()
+
+def get_sec(time_str): # convert timestamp to seconds
+	pt =datetime.datetime.strptime(time_str,'%H:%M:%S.%f')
+	return pt.second+pt.minute*60+pt.hour*3600+pt.microsecond/float(1000000)
 
 # Get job
 inxml=open(args.jobfile).read()
@@ -51,10 +58,29 @@ for child in outtree:
 #print "-----"
 #print outwords
 
-# Compare dictionaries and generate tentative synonym list
-for key in inwords :
-    if key in outwords : 
-       assert(len(inwords[key])==len(outwords[key])) # sanity check
-       for i in range(len(inwords[key])) :
-           # if inwords[key][i].strip()!=outwords[key][i].strip() :
-               print key, i, inwords[key][i].encode("utf-8"), outwords[key][i].encode("utf-8")
+# Read in a synonym file
+if args.synonym_file!=False :
+	sfn= open(args.synonym_file,"r")
+	synsub=dict()
+	for line in sfn.readlines() :
+		sline=line.split()
+		assert len(sline)==2, "Lines should contain two words"
+		key=sline[0]
+		alternative=sline[1]
+		synsub.update({key:alternative})
+	# print synsub
+
+
+# Compare results and keys and generate a list of differences if --print_errors is present.
+if args.errors!=False :
+	if args.errors=="-" :
+		efn = sys.stdout
+	else :
+		efn = open(args.errors,"w")
+	for key in inwords :
+		if key in outwords : 
+			assert(len(inwords[key])==len(outwords[key])) # sanity check
+			for i in range(len(inwords[key])) :
+				if inwords[key][i].strip()!=outwords[key][i].strip() :
+					tobewritten="{0} {1} {2} {3}\n".format(key, i, inwords[key][i].encode("utf-8"), outwords[key][i].encode("utf-8"))
+					efn.write(tobewritten)
