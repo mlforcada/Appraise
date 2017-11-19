@@ -180,16 +180,33 @@ values = lss * [-float("inf")]
 bestk=-1
 log102=math.log10(2.0)
 
+bestword = ["NOBEST"] * lss  # will store the best words at each position according to the language model
 for i in range(0,lss) :
    if (ss[i]).lower() not in stop_words :
-      if args.no_entropy : # Make entropy a random number 
+      if args.no_entropy : # Make entropy a random number
+		   # but compute probabilities anyway for best guess
+		   # this is a bit of brute force
+		   # only if verbose is on
+		   if args.verbose :
+			   bestlogprob=-float("inf")
+			   for j, word in enumerate(unigrams) :
+				   # log probability of sentence with "word" replacing position i
+				   logprob=model.score(" ".join(ss[0:i])+" "+word+" "+" ".join(ss[i+1:]))/log102
+				   if logprob > bestlogprob :
+					   bestlogprob=logprob
+					   bestword[i]=word
+           # make entropy random so that the ordering is random
 		   entropy=random.random()*math.log(onegramcount,2.0)
       else : # compute actual entropy
            entropy=0
            denominator=0
+           bestlogprob=-float("inf")
            for j, word in enumerate(unigrams) :
               # log probability of sentence with "word" replacing position i
               logprob=model.score(" ".join(ss[0:i])+" "+word+" "+" ".join(ss[i+1:]))/log102
+              if logprob > bestlogprob :
+				  bestlogprob=logprob
+				  bestword[i]=word
               unicache[j]=math.pow(2.0,logprob)
               denominator = denominator + unicache[j]
            for j, word in enumerate(unigrams) :
@@ -298,21 +315,31 @@ print "Problem:"
 problem=""
 solution=""
 entropies=""
+if args.verbose :
+	print "Language model guess:"
+lm_hits=0 # words correctly guessed by the language model
 # print holelist
 for pos, word in enumerate(anss) :
 #   print pos, word
    if pos in holelist :
 #	   print pos, word, "in holelist"
+	   if args.verbose :
+		  print "Word in gap=[{0}], best guess=[{1}]".format(anss[pos],bestword[pos])
 	   problem = problem + " { }"
            entropies = entropies + ";" + "{0:7.2f}".format(values[pos])  
 	   solution = solution + ";" + anss[pos]
+	   if anss[pos]==bestword[pos] :
+		   lm_hits=lm_hits+1
    else :
 	   problem = problem + " " + anss[pos]
 solution=solution.lstrip(";")
 entropies=entropies.lstrip(";")
 solution=escape(solution)
 
-
+if args.verbose :
+	lm_score=float(lm_hits)/float(nholes)
+	print "Number of gaps={0}, total hits={1}".format(nholes,lm_hits) 
+	print "Score={0:7.4f} at {1}%".format(lm_score,args.percentage)
 
 # print " ".join(anss)
 print problem
