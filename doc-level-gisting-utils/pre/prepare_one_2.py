@@ -339,7 +339,7 @@ solution=escape(solution)
 if args.verbose :
 	lm_score=float(lm_hits)/float(nholes)
 	print "Number of gaps={0}, total hits={1}".format(nholes,lm_hits) 
-	print "Score={0:7.4f} at {1}%".format(lm_score,args.percentage)
+	print "Score={0:7.4f} at {1}%, strategy {2}".format(lm_score,args.percentage,entmode)
 
 # print " ".join(anss)
 print problem
